@@ -1,5 +1,5 @@
 -- Insert test data for `user` table
-INSERT INTO `onepass`.`user` (`iduser`, `email`, `secret_key`) VALUES
+INSERT INTO `onepass`.`user` (`id`, `email`, `secret_key`) VALUES
 (1, 'user1@example.com', 'secret1'),
 (2, 'user2@example.com', 'secret2'),
 (3, 'user3@example.com', 'secret3');

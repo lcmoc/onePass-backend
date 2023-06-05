@@ -24,10 +24,10 @@ USE `onepass` ;
 DROP TABLE IF EXISTS `onepass`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `onepass`.`user` (
-  `iduser` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `secret_key` VARCHAR(45) NULL,
-  PRIMARY KEY (`iduser`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -39,12 +39,12 @@ DROP TABLE IF EXISTS `onepass`.`category` ;
 CREATE TABLE IF NOT EXISTS `onepass`.`category` (
   `id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(45) NULL,
-  `user_iduser` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`, `user_iduser`),
-  INDEX `fk_category_user1_idx` (`user_iduser` ASC) VISIBLE,
+  `user_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`, `user_id`),
+  INDEX `fk_category_user1_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_category_user1`
-    FOREIGN KEY (`user_iduser`)
-    REFERENCES `onepass`.`user` (`iduser`)
+    FOREIGN KEY (`user_id`)
+    REFERENCES `onepass`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -78,13 +78,13 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Insert test data for `user` table
-INSERT INTO `onepass`.`user` (`iduser`, `email`, `secret_key`) VALUES
+INSERT INTO `onepass`.`user` (`id`, `email`, `secret_key`) VALUES
 (1, 'user1@example.com', 'secret1'),
 (2, 'user2@example.com', 'secret2'),
 (3, 'user3@example.com', 'secret3');
 
 -- Insert test data for `category` table
-INSERT INTO `onepass`.`category` (`id`, `name`, `user_iduser`) VALUES
+INSERT INTO `onepass`.`category` (`id`, `name`, `user_id`) VALUES
 (1, 'Category 1', 1),
 (2, 'Category 2', 1),
 (3, 'Category 3', 2),

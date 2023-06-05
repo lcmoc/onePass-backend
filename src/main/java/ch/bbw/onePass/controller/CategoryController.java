@@ -1,7 +1,7 @@
 package ch.bbw.onePass.controller;
 
-import ch.bbw.onePass.service.UserService;
-import ch.bbw.onePass.model.UserEntity;
+import ch.bbw.onePass.model.CategoryEntity;
+import ch.bbw.onePass.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,19 +12,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class UserController {
-    private final UserService userService;
+public class CategoryController {
+    private final CategoryService categoryService;
 
     @Autowired
-    public UserController(UserService studentService) {
-        this.userService = studentService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<List<UserEntity>> getUsers() {
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryEntity>> getUsers() {
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(userService.loadAll());
+                .body(categoryService.loadAll());
     }
+
 }

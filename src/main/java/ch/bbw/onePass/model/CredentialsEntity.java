@@ -40,4 +40,7 @@ public class CredentialsEntity {
     @Column(name = "notice")
     private String notice;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    CategoryEntity category;
 }

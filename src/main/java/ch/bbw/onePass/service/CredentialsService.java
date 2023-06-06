@@ -17,4 +17,16 @@ public class CredentialsService {
     public List<CredentialsEntity> loadAll() {
         return (List<CredentialsEntity>) repository.findAll();
     }
+
+    public CredentialsEntity getCredentialById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Credential not found"));
+    }
+
+    public String getPasswordById(Long id) {
+        CredentialsEntity credential = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Credential not found"));
+
+        return credential.getPassword();
+    }
 }

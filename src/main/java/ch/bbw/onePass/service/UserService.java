@@ -5,6 +5,7 @@ import ch.bbw.onePass.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -16,6 +17,10 @@ public class UserService {
 
     public List<UserEntity> loadAll() {
         return (List< UserEntity>) repository.findAll();
+    }
+
+    public Optional<UserEntity> getByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
 }

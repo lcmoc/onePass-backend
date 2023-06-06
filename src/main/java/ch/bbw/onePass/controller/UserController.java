@@ -7,8 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,5 +43,40 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(user);
+    }
+
+    @PostMapping("/users")
+    public ResponseEntity<UserEntity>
+    addUser(@RequestBody UserEntity user) {
+
+        userService.create(user);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)  // HTTP 201
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(user);
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserEntity>
+    updateUser(@RequestBody UserEntity user) {
+
+        userService.create(user);
+        return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(user);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?>
+    deleteUser(@PathVariable Long id) {
+        Optional<UserEntity> user = userService.loadOne(id);
+
+        if (user.isPresent()) {
+            System.out.println("removed user");
+            userService.delete(id);
+            return ResponseEntity.noContent().build();  // HTTP 204
+        } else {
+            return ResponseEntity.notFound().build();   // HTTP 404
+        }
     }
 }

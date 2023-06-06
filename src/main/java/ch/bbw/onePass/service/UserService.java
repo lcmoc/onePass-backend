@@ -23,4 +23,19 @@ public class UserService {
         return repository.findByEmail(email);
     }
 
+    public Optional<UserEntity> loadOne(Long id) {
+        return repository.findById(id);
+    }
+
+    public UserEntity create(UserEntity userEntity) {
+        return repository.save(userEntity);
+    }
+
+    public UserEntity update(UserEntity updateUser) {
+        return repository.save(updateUser);
+    }
+
+    public void delete(Long userId) {
+        repository.deleteById(userId);
+    }
 }

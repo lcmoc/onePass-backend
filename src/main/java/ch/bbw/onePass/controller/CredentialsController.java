@@ -66,15 +66,12 @@ public class CredentialsController {
                 .body(password);
     }
 
-    @PostMapping("/credentials")
-    public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
+    public boolean checkIds(CredentialsEntity credential) {
         Long categoryId = credential.getCategory().getId();
         CategoryEntity category = categoryService.getCategoryById(categoryId);
 
         if (category == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)  // HTTP 404
-                    .body("Category not found");
+            return false;
         }
 
         Long userId = credential.getUser().getId();
@@ -84,6 +81,17 @@ public class CredentialsController {
         boolean areUserIdsEqual = userId.equals(categoryUserId);
 
         if (areIdsNotEmpty && areUserIdsEqual) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @PostMapping("/credentials")
+    public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
+
+        if (checkIds(credential)) {
             credentialsService.create(credential);
             return ResponseEntity
                     .status(HttpStatus.CREATED)  // HTTP 201
@@ -96,9 +104,27 @@ public class CredentialsController {
         }
     }
 
-    @PutMapping("/credentials/{id}")
+    // extra update for password?
+    @PutMapping("/credentials/{id}")    
     public ResponseEntity<CredentialsEntity>
     updateCredential(@RequestBody CredentialsEntity credential) {
+        Optional<CredentialsEntity> existingCredential = credentialsService.loadOne(credential.getId());
+
+        if(!existingCredential.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if(checkIds(credential) == false) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)  // HTTP 400
+                    .build();
+        }
+
+        if(existingCredential.equals(credential)) {
+            // check if the equals works (doesn't seem like it)
+            // implement correct response entity
+            throw new RuntimeException("Nothing changed");
+        }
 
         credentialsService.update(credential);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
@@ -109,9 +135,9 @@ public class CredentialsController {
     @DeleteMapping("/credentials/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {
-        Optional<CredentialsEntity> user = credentialsService.loadOne(id);
+        Optional<CredentialsEntity> credential = credentialsService.loadOne(id);
 
-        if (user.isPresent()) {
+        if (credential.isPresent()) {
             credentialsService.delete(id);
             return ResponseEntity.noContent().build();  // HTTP 204
         } else {

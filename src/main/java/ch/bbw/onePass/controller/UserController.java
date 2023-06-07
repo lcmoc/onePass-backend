@@ -65,15 +65,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        String existingEmail = existingUser.get().getEmail();
-        String newEmail = user.getEmail();
-        boolean isSameEmail = existingEmail.equals(newEmail);
-
-        String existingSecretKey = existingUser.get().getSecretKey();
-        String newSecretKey = user.getSecretKey();
-        boolean isSameSecretKey = existingSecretKey.equals(newSecretKey);
-
-        if(isSameEmail && isSameSecretKey) {
+        if(existingUser.equals(user)) {
             // implement correct response entity
             throw new RuntimeException("Nothing changed");
         }

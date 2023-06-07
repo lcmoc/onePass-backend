@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/users/email={email}")
-    public ResponseEntity<Optional<UserEntity>> getUserById(@PathVariable String email) {
+    public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email) {
         Optional<UserEntity> user = userService.getByEmail(email);
 
         if (user == null) {
@@ -60,7 +60,7 @@ public class UserController {
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
 
-        userService.create(user);
+        userService.update(user);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(user);

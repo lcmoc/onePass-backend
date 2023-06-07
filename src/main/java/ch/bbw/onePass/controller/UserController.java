@@ -72,7 +72,6 @@ public class UserController {
         Optional<UserEntity> user = userService.loadOne(id);
 
         if (user.isPresent()) {
-            System.out.println("removed user");
             userService.delete(id);
             return ResponseEntity.noContent().build();  // HTTP 204
         } else {

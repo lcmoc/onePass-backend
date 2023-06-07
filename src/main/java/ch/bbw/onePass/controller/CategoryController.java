@@ -73,7 +73,6 @@ public class CategoryController {
         Optional<CategoryEntity> category = categoryService.loadOne(id);
 
         if (category.isPresent()) {
-            System.out.println("removed user");
             categoryService.delete(id);
             return ResponseEntity.noContent().build();  // HTTP 204
         } else {

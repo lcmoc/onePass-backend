@@ -24,7 +24,7 @@ USE `onepass` ;
 DROP TABLE IF EXISTS `onepass`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `onepass`.`user` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL  AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `secret_key` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
@@ -37,7 +37,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `onepass`.`category` ;
 
 CREATE TABLE IF NOT EXISTS `onepass`.`category` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `user_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`, `user_id`),
@@ -56,7 +56,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `onepass`.`credentials` ;
 
 CREATE TABLE IF NOT EXISTS `onepass`.`credentials` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NULL,
   `password` VARCHAR(45) NULL,
   `url` VARCHAR(45) NULL,

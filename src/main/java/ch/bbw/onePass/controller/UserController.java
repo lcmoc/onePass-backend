@@ -59,6 +59,24 @@ public class UserController {
     @PutMapping("/users/{id}")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
+        Optional<UserEntity> existingUser = userService.loadOne(user.getId());
+
+        if(!existingUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String existingEmail = existingUser.get().getEmail();
+        String newEmail = user.getEmail();
+        boolean isSameEmail = existingEmail.equals(newEmail);
+
+        String existingSecretKey = existingUser.get().getSecretKey();
+        String newSecretKey = user.getSecretKey();
+        boolean isSameSecretKey = existingSecretKey.equals(newSecretKey);
+
+        if(isSameEmail && isSameSecretKey) {
+            // implement correct response entity
+            throw new RuntimeException("Nothing changed");
+        }
 
         userService.update(user);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
@@ -77,5 +95,11 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build();   // HTTP 404
         }
+    }
+
+    @GetMapping("users/emails")
+    public ResponseEntity<List<String>> getAllEmails() {
+        List<String> emails = userService.getAllEmails();
+        return ResponseEntity.ok(emails);
     }
 }

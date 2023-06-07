@@ -24,4 +24,7 @@ public class CategoryEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "user_id", nullable = false)
+    Long user_id;
 }

@@ -36,4 +36,9 @@ public class CategoryService {
         return repository.findByName(email);
     }
 
+    public CategoryEntity getCategoryById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
 }

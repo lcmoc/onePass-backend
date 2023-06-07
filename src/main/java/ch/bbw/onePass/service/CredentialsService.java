@@ -47,4 +47,8 @@ public class CredentialsService {
     public void delete(Long userId) {
         repository.deleteById(userId);
     }
+
+    public List<CredentialsEntity> getCredentialsByUserId(int userId) {
+        return repository.findByUser_Id(userId);
+    }
 }

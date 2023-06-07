@@ -43,4 +43,9 @@ public class CredentialsEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     CategoryEntity category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    UserEntity user;
+    
 }

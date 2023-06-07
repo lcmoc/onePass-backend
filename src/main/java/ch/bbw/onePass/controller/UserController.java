@@ -28,7 +28,7 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userService.loadAll());
     }
-
+    
     @GetMapping("/users/email={email}")
     public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email) {
         Optional<UserEntity> user = userService.getByEmail(email);

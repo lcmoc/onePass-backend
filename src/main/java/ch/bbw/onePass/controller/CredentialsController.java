@@ -96,4 +96,20 @@ public class CredentialsController {
             return ResponseEntity.notFound().build();   // HTTP 404
         }
     }
+
+    @GetMapping("/credentials/user/{userId}")
+    public ResponseEntity<List<CredentialsEntity>> getCredentialsByUserId(@PathVariable("userId") int userId) {
+        List<CredentialsEntity> credentials = (List<CredentialsEntity>) credentialsService.getCredentialsByUserId(userId);
+
+        for (CredentialsEntity credential : credentials) {
+            credential.setPassword(null);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK) // HTTP 200
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(credentials);
+    }
+
+
 }

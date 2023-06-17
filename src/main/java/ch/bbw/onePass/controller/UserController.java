@@ -21,6 +21,7 @@ public class UserController {
         this.userService = studentService;
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/users")
     public ResponseEntity<List<UserEntity>> getUsers() {
         return ResponseEntity
@@ -28,7 +29,8 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userService.loadAll());
     }
-    
+
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/users/email={email}")
     public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email) {
         Optional<UserEntity> user = userService.getByEmail(email);
@@ -45,6 +47,7 @@ public class UserController {
                 .body(user);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/users")
     public ResponseEntity<UserEntity>
     addUser(@RequestBody UserEntity user) {

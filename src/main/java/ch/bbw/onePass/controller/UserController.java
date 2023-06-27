@@ -59,6 +59,7 @@ public class UserController {
                 .body(user);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/users/{id}")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
@@ -78,6 +79,7 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(user);
     }
+
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?>

@@ -37,6 +37,8 @@ public class UserController {
     }
 
     @PostMapping("/allUsers")
+    @CrossOrigin(origins = {"http://localhost:3000/"})
+    @GetMapping("/users")
     public ResponseEntity<List<UserEntity>> getUsers() {
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200
@@ -63,6 +65,9 @@ public class UserController {
     
     @PostMapping("/users/email={email}&password={password}")
     public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email, @PathVariable String password) throws UnsupportedEncodingException {
+    @CrossOrigin(origins = {"http://localhost:3000/"})
+    @GetMapping("/users/email={email}")
+    public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email) {
         Optional<UserEntity> user = userService.getByEmail(email);
 
         if(password != "") {
@@ -88,6 +93,7 @@ public class UserController {
                 .body(user);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/users")
     public ResponseEntity<UserEntity>
     addUser(@RequestBody UserEntity user) {
@@ -99,6 +105,7 @@ public class UserController {
                 .body(user);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/users/{id}")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
@@ -119,6 +126,8 @@ public class UserController {
                 .body(user);
     }
 
+
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {
@@ -132,7 +141,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("users/emails")
+    @CrossOrigin(origins = {"http://localhost:3000/"})
+    @GetMapping("users/emails")
     public ResponseEntity<List<String>> getAllEmails() {
         List<String> emails = userService.getAllEmails();
         return ResponseEntity.ok(emails);

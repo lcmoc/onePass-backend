@@ -22,6 +22,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryEntity>> getCategories() {
         return ResponseEntity
@@ -30,6 +31,7 @@ public class CategoryController {
                 .body(categoryService.loadAll());
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/name={name}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByName(@PathVariable String name) {
         Optional<CategoryEntity> user = categoryService.getByName(name);
@@ -46,6 +48,7 @@ public class CategoryController {
                 .body(user);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
     addCategory(@RequestBody CategoryEntity category) {
@@ -57,6 +60,7 @@ public class CategoryController {
                 .body(category);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryEntity>
     updateUser(@RequestBody CategoryEntity category) {
@@ -67,6 +71,7 @@ public class CategoryController {
                 .body(category);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {

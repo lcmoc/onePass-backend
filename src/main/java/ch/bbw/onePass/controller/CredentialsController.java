@@ -25,6 +25,7 @@ public class CredentialsController {
         this.categoryService = categoryService;
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials")
     public ResponseEntity<List<CredentialsEntity>> getCredentials() {
         List<CredentialsEntity> credentials = credentialsService.loadAll();
@@ -39,6 +40,7 @@ public class CredentialsController {
                 .body(credentials);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/{id}")
     public ResponseEntity<CredentialsEntity> getCredentialById(@PathVariable Long id) {
         CredentialsEntity credential = credentialsService.getCredentialById(id);
@@ -56,6 +58,7 @@ public class CredentialsController {
                 .body(credential);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/{id}/password")
     public ResponseEntity<String> getPassword(@PathVariable("id") Long id) {
         String password = credentialsService.getPasswordById(id);
@@ -87,7 +90,7 @@ public class CredentialsController {
         return false;
     }
 
-
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/credentials")
     public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
 
@@ -105,6 +108,7 @@ public class CredentialsController {
     }
 
     // extra update for password?
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/credentials/{id}")    
     public ResponseEntity<CredentialsEntity>
     updateCredential(@RequestBody CredentialsEntity credential) {
@@ -132,6 +136,7 @@ public class CredentialsController {
                 .body(credential);
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/credentials/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {
@@ -145,6 +150,7 @@ public class CredentialsController {
         }
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/user/{userId}")
     public ResponseEntity<List<CredentialsEntity>> getCredentialsByUserId(@PathVariable("userId") int userId) {
         List<CredentialsEntity> credentials = (List<CredentialsEntity>) credentialsService.getCredentialsByUserId(userId);

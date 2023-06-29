@@ -1,31 +1,23 @@
 package ch.bbw.onePass.controller;
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 
+import ch.bbw.onePass.helpers.UserUuidDto;
+import ch.bbw.onePass.helpers.UuidSingleton;
 import ch.bbw.onePass.service.UserService;
 import ch.bbw.onePass.model.UserEntity;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
 
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -46,52 +38,42 @@ public class UserController {
                 .body(userService.loadAll());
     }
 
-    private static final String KEY_ALGORITHM = "AES";
-    private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
-    private static final Integer LENGTH = 128;
-    public static String decrypt(String ciphertext) throws Exception {
-        SecretKey secretKey = getSecretKey("o9szYIOq1rRMiouNhNvaq96lqUvCekxR");
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        return new String(cipher.doFinal(Base64.getDecoder().decode(ciphertext)));
-        //return new String(cipher.doFinal(base64Decode("ASDASDADS")));
+    public static boolean decryptSecretKey(String password, String encryptedSecretKey) {
+        try {
+            byte[] key = password.getBytes("UTF-8");
+            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+
+            byte[] encryptedBytes = Base64.decodeBase64(encryptedSecretKey);
+
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+
+            String decryptedSecretKey = new String(decryptedBytes, "UTF-8");
+            System.out.println("Decrypted Secret Key: " + decryptedSecretKey);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Failed to decrypt: " + e);
+            return false;
+        }
     }
 
-    public static SecretKey getSecretKey(String secretKey) throws Exception {
-        byte[] decodeSecretKey = Base64.getDecoder().decode(secretKey);
-        //byte[] decodeSecretKey = base64Decode(secretKey);
-        return new SecretKeySpec(decodeSecretKey, 0, decodeSecretKey.length, "AES");
-    }
-    
-    @PostMapping("/users/email={email}&password={password}")
-    public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email, @PathVariable String password) throws UnsupportedEncodingException {
     @CrossOrigin(origins = {"http://localhost:3000/"})
-    @GetMapping("/users/email={email}")
-    public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email) {
-        Optional<UserEntity> user = userService.getByEmail(email);
+    @PostMapping("/users/email={email}")
+    public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email) {
+        Optional<UserEntity> optionalUser = userService.getByEmail(email);
 
-        if(password != "") {
-            String encryptedUserSecretKey = user.get().getSecretKey();
-
-
-            if (user == null) {
-                return ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .build();
-            }
-
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(user);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
 
-        user.get().setSecretKey("");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(user);
+        UUID uuid = UuidSingleton.getInstance().getUuid();
+        UserEntity user = optionalUser.get();
+        UserUuidDto userUuidDto = new UserUuidDto(user, uuid);
+
+        return ResponseEntity.ok(userUuidDto);
     }
+
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/users")

@@ -1,6 +1,7 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.model.CategoryEntity;
+import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,17 @@ public class CategoryController {
         } else {
             return ResponseEntity.notFound().build();   // HTTP 404
         }
+    }
+
+    @GetMapping("/categories/user/{userId}")
+    public ResponseEntity<List<CategoryEntity>> getCategoriesByUserId(@PathVariable("userId") int userId) {
+        List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);
+
+
+        return ResponseEntity
+                .status(HttpStatus.OK) // HTTP 200
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(categories);
     }
 
 }

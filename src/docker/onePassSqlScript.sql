@@ -57,6 +57,7 @@ DROP TABLE IF EXISTS `onepass`.`credentials` ;
 
 CREATE TABLE IF NOT EXISTS `onepass`.`credentials` (
 `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(45) NULL,
 `username` VARCHAR(45) NULL,
 `password` VARCHAR(45) NULL,
 `url` VARCHAR(45) NULL,
@@ -99,9 +100,9 @@ INSERT INTO `category` (`name`, `user_id`) VALUES
 ('Category 5', 3);
 
 -- Testdata for table `credentials`
-INSERT INTO `credentials` (`username`, `password`, `url`, `email`, `notice`, `category_id`, `user_id`) VALUES
-('user1', 'password1', 'https://example.com', 'user1@example.com', 'Note 1', 1, 1),
-('user2', 'password2', 'https://example.com', 'user2@example.com', 'Note 2', 1, 1),
-('user3', 'password3', 'https://example.com', 'user3@example.com', 'Note 3', 2, 1),
-('user4', 'password4', 'https://example.com', 'user4@example.com', 'Note 4', 2, 1),
-('user5', 'password5', 'https://example.com', 'user5@example.com', 'Note 5', 3, 2);
+INSERT INTO `credentials` (`username`, `name`, `password`, `url`, `email`, `notice`, `category_id`, `user_id`) VALUES
+('user1', 'name1', 'password1', 'https://example.com', 'user1@example.com', 'Note 1', 1, 1),
+('user2', 'name2', 'password2', 'https://example.com', 'user2@example.com', 'Note 2', 1, 1),
+('user3', 'name3', 'password3', 'https://example.com', 'user3@example.com', 'Note 3', 2, 1),
+('user4', 'name4', 'password4', 'https://example.com', 'user4@example.com', 'Note 4', 2, 1),
+('user5', 'name5', 'password5', 'https://example.com', 'user5@example.com', 'Note 5', 3, 2);

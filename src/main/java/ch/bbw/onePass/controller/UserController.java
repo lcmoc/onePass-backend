@@ -81,6 +81,7 @@ public class UserController {
     }
 
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {
@@ -94,6 +95,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("users/emails")
     public ResponseEntity<List<String>> getAllEmails() {
         List<String> emails = userService.getAllEmails();

@@ -46,6 +46,22 @@ public class CategoryController {
                 .body(user);
     }
 
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
+        CategoryEntity user = categoryService.getCategoryById(id);
+
+        if (user == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Optional.of(user));
+    }
+
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
     addCategory(@RequestBody CategoryEntity category) {

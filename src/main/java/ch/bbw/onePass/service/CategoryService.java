@@ -45,5 +45,4 @@ public class CategoryService {
     public List<CategoryEntity> getCategoryByUserId(int userId) {
         return repository.findByUser_Id(userId);
     }
-
 }

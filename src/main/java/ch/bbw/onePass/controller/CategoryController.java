@@ -81,7 +81,7 @@ public class CategoryController {
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryEntity>
-    updateUser(@RequestBody CategoryEntity category) {
+    updateCategory(@RequestBody CategoryEntity category) {
 
         categoryService.create(category);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
@@ -92,7 +92,7 @@ public class CategoryController {
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?>
-    deleteUser(@PathVariable Long id) {
+    deleteCategory(@PathVariable Long id) {
         Optional<CategoryEntity> category = categoryService.loadOne(id);
 
         if (category.isPresent()) {
@@ -107,7 +107,6 @@ public class CategoryController {
     @GetMapping("/categories/user/{userId}")
     public ResponseEntity<List<CategoryEntity>> getCategoriesByUserId(@PathVariable("userId") int userId) {
         List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);
-
 
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200

@@ -139,7 +139,7 @@ public class CredentialsController {
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/credentials/{id}")
     public ResponseEntity<?>
-    deleteUser(@PathVariable Long id) {
+    deleteCredential(@PathVariable Long id) {
         Optional<CredentialsEntity> credential = credentialsService.loadOne(id);
 
         if (credential.isPresent()) {

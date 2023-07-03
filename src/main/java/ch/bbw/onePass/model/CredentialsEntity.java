@@ -25,6 +25,9 @@ public class CredentialsEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "username")
     private String username;
 

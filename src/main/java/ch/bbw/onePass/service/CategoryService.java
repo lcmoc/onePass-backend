@@ -1,6 +1,7 @@
 package ch.bbw.onePass.service;
 
 import ch.bbw.onePass.model.CategoryEntity;
+import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -41,4 +42,7 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
+    public List<CategoryEntity> getCategoryByUserId(int userId) {
+        return repository.findByUser_Id(userId);
+    }
 }

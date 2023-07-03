@@ -25,6 +25,20 @@ public class CategoryEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "user_id", nullable = false)
-    Long user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    UserEntity user;
+
+    public Long getUser_id() {
+        return user.id;
+    }
+
+    public void setUser_id(Long id) {
+        if (this.user == null) {
+            this.user = new UserEntity();
+        }
+        this.user.setId(id);
+    }
+
+
 }

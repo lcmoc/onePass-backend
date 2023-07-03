@@ -1,6 +1,7 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.model.CategoryEntity;
+import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,23 @@ public class CategoryController {
     }
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
+        CategoryEntity user = categoryService.getCategoryById(id);
+
+        if (user == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .build();
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Optional.of(user));
+    }
+
+    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
     addCategory(@RequestBody CategoryEntity category) {
@@ -63,7 +81,7 @@ public class CategoryController {
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryEntity>
-    updateUser(@RequestBody CategoryEntity category) {
+    updateCategory(@RequestBody CategoryEntity category) {
 
         categoryService.create(category);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
@@ -74,7 +92,7 @@ public class CategoryController {
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?>
-    deleteUser(@PathVariable Long id) {
+    deleteCategory(@PathVariable Long id) {
         Optional<CategoryEntity> category = categoryService.loadOne(id);
 
         if (category.isPresent()) {
@@ -83,6 +101,17 @@ public class CategoryController {
         } else {
             return ResponseEntity.notFound().build();   // HTTP 404
         }
+    }
+
+    @CrossOrigin(origins = {"http://localhost:3000/"})
+    @GetMapping("/categories/user/{userId}")
+    public ResponseEntity<List<CategoryEntity>> getCategoriesByUserId(@PathVariable("userId") int userId) {
+        List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK) // HTTP 200
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(categories);
     }
 
 }

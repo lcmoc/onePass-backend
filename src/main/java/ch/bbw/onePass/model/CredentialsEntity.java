@@ -12,12 +12,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity(name = "CREDENTIALS")
 public class CredentialsEntity {
-    public CredentialsEntity(String username, String email, String password, String url, String notice) {
+    public CredentialsEntity(UserEntity user, CategoryEntity category, String username, String email, String password, String url, String notice, String name) {
+        setUser(user);
+        this.category = category;
+        this.user = user;
         this.username = username;
         this.email = email;
         this.password = password;
         this.url = url;
         this.notice = notice;
+        this.name = name;
     }
 
     @Column(name = "id", updatable = false, nullable = false)
@@ -50,5 +54,9 @@ public class CredentialsEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     UserEntity user;
-    
+
+    public Long getUser_id() {
+        return user.getId();
+    }
+
 }

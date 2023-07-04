@@ -69,6 +69,7 @@ public class CredentialsController {
                 .body(password);
     }
 
+
     public boolean checkIds(CredentialsEntity credential) {
         Long categoryId = credential.getCategory().getId();
         CategoryEntity category = categoryService.getCategoryById(categoryId);
@@ -77,7 +78,7 @@ public class CredentialsController {
             return false;
         }
 
-        Long userId = credential.getUser().getId();
+        Long userId = credential.getUser_id();
         Long categoryUserId = category.getUser_id();
 
         boolean areIdsNotEmpty = userId != null && categoryUserId != null;
@@ -94,12 +95,13 @@ public class CredentialsController {
     @PostMapping("/credentials")
     public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
 
+        //return ResponseEntity.status(HttpStatus.CREATED).build();
         if (checkIds(credential)) {
             credentialsService.create(credential);
             return ResponseEntity
                     .status(HttpStatus.CREATED)  // HTTP 201
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(credential);
+                    .build();
         } else {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)  // HTTP 400

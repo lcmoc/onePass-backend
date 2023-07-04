@@ -13,8 +13,9 @@ import lombok.Setter;
 @Entity(name = "CATEGORY")
 public class CategoryEntity {
 
-    public CategoryEntity(String name) {
+    public CategoryEntity(String name, UserEntity user) {
         this.name = name;
+        this.user = user;
     }
 
     @Column(name = "id", updatable = false, nullable = false)
@@ -30,15 +31,9 @@ public class CategoryEntity {
     UserEntity user;
 
     public Long getUser_id() {
-        return user.id;
+        return user.getId();
     }
 
-    public void setUser_id(Long id) {
-        if (this.user == null) {
-            this.user = new UserEntity();
-        }
-        this.user.setId(id);
-    }
 
 
 }

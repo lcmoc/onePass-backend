@@ -37,10 +37,6 @@ public class UserService {
     }
 
     public UserEntity update(UserEntity updateUser) {
-        if (repository.existsByEmail(updateUser.getEmail())) {
-            throw new RuntimeException("E-Mail already exists");
-        }
-
         return repository.save(updateUser);
     }
 

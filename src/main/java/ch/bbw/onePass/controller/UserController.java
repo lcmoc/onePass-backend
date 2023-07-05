@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
-    @PutMapping("/users/{id}")
+    @PutMapping("/users")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
         Optional<UserEntity> existingUser = userService.loadOne(user.getId());

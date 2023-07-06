@@ -1,6 +1,7 @@
 package ch.bbw.onePass.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity(name = "CREDENTIALS")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(value = {"user"})
 public class CredentialsEntity {
     public CredentialsEntity(CategoryEntity category, String username, String email, String password, String url, String notice, String name) {
         this.category = category;

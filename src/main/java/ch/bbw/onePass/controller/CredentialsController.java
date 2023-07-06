@@ -78,7 +78,7 @@ public class CredentialsController {
             return false;
         }
 
-        Long userId = credential.getUser_id();
+        Long userId = credential.getCategory().getUser_id();
         Long categoryUserId = category.getUser_id();
 
         boolean areIdsNotEmpty = userId != null && categoryUserId != null;
@@ -155,11 +155,7 @@ public class CredentialsController {
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/user/{userId}")
     public ResponseEntity<List<CredentialsEntity>> getCredentialsByUserId(@PathVariable("userId") int userId) {
-        List<CredentialsEntity> credentials = (List<CredentialsEntity>) credentialsService.getCredentialsByUserId(userId);
-
-        for (CredentialsEntity credential : credentials) {
-            credential.setPassword(null);
-        }
+        List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId((long) userId);
 
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200

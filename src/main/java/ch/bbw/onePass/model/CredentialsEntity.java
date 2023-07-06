@@ -1,10 +1,12 @@
 package ch.bbw.onePass.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Getter
 @Setter
@@ -12,10 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity(name = "CREDENTIALS")
 public class CredentialsEntity {
-    public CredentialsEntity(UserEntity user, CategoryEntity category, String username, String email, String password, String url, String notice, String name) {
-        setUser(user);
+    public CredentialsEntity(CategoryEntity category, String username, String email, String password, String url, String notice, String name) {
         this.category = category;
-        this.user = user;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -50,13 +50,4 @@ public class CredentialsEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     CategoryEntity category;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    UserEntity user;
-
-    public Long getUser_id() {
-        return user.getId();
-    }
-
 }

@@ -1,5 +1,6 @@
 package ch.bbw.onePass.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +34,5 @@ public class CategoryEntity {
     public Long getUser_id() {
         return user.getId();
     }
-
-
 
 }

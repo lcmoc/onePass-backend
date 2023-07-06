@@ -1,23 +1,31 @@
 package ch.bbw.onePass.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.catalina.User;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity(name = "CREDENTIALS")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CredentialsEntity {
-    public CredentialsEntity(String username, String email, String password, String url, String notice) {
+    public CredentialsEntity(CategoryEntity category, String username, String email, String password, String url, String notice, String name, UserEntity user) {
+        this.category = category;
         this.username = username;
         this.email = email;
         this.password = password;
         this.url = url;
         this.notice = notice;
+        this.name = name;
+        this.user = user;
     }
 
     @Column(name = "id", updatable = false, nullable = false)
@@ -45,10 +53,9 @@ public class CredentialsEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    CategoryEntity category;
+    private CategoryEntity category;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     UserEntity user;
-    
 }

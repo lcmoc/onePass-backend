@@ -4,6 +4,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import ch.bbw.onePass.helpers.UserUuidDto;
 import ch.bbw.onePass.helpers.UuidSingleton;
+import ch.bbw.onePass.service.CategoryService;
+import ch.bbw.onePass.service.CredentialsService;
 import ch.bbw.onePass.service.UserService;
 import ch.bbw.onePass.model.UserEntity;
 import org.apache.commons.codec.binary.Base64;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,12 +22,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Transactional
 @Controller
 public class UserController {
+    private final CredentialsService credentialsService;
+    private final CategoryService categoryService;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService studentService) {
+    public UserController(CredentialsService credentialsService, CategoryService categoryService, UserService studentService) {
+        this.credentialsService = credentialsService;
+        this.categoryService = categoryService;
         this.userService = studentService;
     }
 
@@ -88,7 +96,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
-    @PutMapping("/users/{id}")
+    @PutMapping("/users")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
         Optional<UserEntity> existingUser = userService.loadOne(user.getId());
@@ -116,6 +124,8 @@ public class UserController {
         Optional<UserEntity> user = userService.loadOne(id);
 
         if (user.isPresent()) {
+            credentialsService.deleteByUserId(id);
+            categoryService.deleteByUserId(id);
             userService.delete(id);
             return ResponseEntity.noContent().build();  // HTTP 204
         } else {

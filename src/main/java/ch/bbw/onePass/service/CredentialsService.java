@@ -37,6 +37,7 @@ public class CredentialsService {
     }
 
     public CredentialsEntity create(CredentialsEntity credential) {
+        System.out.println(credential.getUser());
         return repository.save(credential);
     }
 
@@ -48,7 +49,21 @@ public class CredentialsService {
         repository.deleteById(userId);
     }
 
-    public List<CredentialsEntity> getCredentialsByUserId(int userId) {
-        return repository.findByUser_Id(userId);
+    public List<CredentialsEntity> getAllCredentialsByUserId(Long userId) {
+        return repository.findByCategoryUserId(userId);
     }
+
+    public void deleteByUserId(Long userId) {
+        repository.deleteByCategory_User_Id(userId);
+    }
+
+    public void deleteByCategoryId(Long categoryId) {
+        repository.deleteByCategoryId(categoryId);
+    }
+
+    public List<CredentialsEntity> getCredentialsByCategoryId(Long categoryId) {
+        return repository.findByCategory_Id(categoryId);
+    }
+
+
 }

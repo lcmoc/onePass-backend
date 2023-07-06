@@ -1,5 +1,10 @@
 package ch.bbw.onePass.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +18,9 @@ import lombok.Setter;
 @Entity(name = "CATEGORY")
 public class CategoryEntity {
 
-    public CategoryEntity(String name) {
+    public CategoryEntity(String name, UserEntity user) {
         this.name = name;
+        this.user = user;
     }
 
     @Column(name = "id", updatable = false, nullable = false)
@@ -30,15 +36,7 @@ public class CategoryEntity {
     UserEntity user;
 
     public Long getUser_id() {
-        return user.id;
+        return user.getId();
     }
-
-    public void setUser_id(Long id) {
-        if (this.user == null) {
-            this.user = new UserEntity();
-        }
-        this.user.setId(id);
-    }
-
 
 }

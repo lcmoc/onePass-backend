@@ -78,8 +78,8 @@ public class CredentialsController {
             return false;
         }
 
-        Long userId = credential.getCategory().getUser_id();
-        Long categoryUserId = category.getUser_id();
+        Long userId = credential.getCategory().getUser().getId();
+        Long categoryUserId = category.getUser().getId();
 
         boolean areIdsNotEmpty = userId != null && categoryUserId != null;
         boolean areUserIdsEqual = userId.equals(categoryUserId);
@@ -93,11 +93,12 @@ public class CredentialsController {
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/credentials")
+
     public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
 
-        //return ResponseEntity.status(HttpStatus.CREATED).build();
-        if (checkIds(credential)) {
+        if (credential != null) {
             credentialsService.create(credential);
+
             return ResponseEntity
                     .status(HttpStatus.CREATED)  // HTTP 201
                     .contentType(MediaType.APPLICATION_JSON)
@@ -120,11 +121,6 @@ public class CredentialsController {
             return ResponseEntity.notFound().build();
         }
 
-        if(checkIds(credential) == false) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)  // HTTP 400
-                    .build();
-        }
 
         if(existingCredential.equals(credential)) {
             // check if the equals works (doesn't seem like it)
@@ -135,7 +131,7 @@ public class CredentialsController {
         credentialsService.update(credential);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(credential);
+                .build();
     }
 
     @CrossOrigin(origins = {"http://localhost:3000/"})

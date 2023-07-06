@@ -37,6 +37,7 @@ public class CredentialsService {
     }
 
     public CredentialsEntity create(CredentialsEntity credential) {
+        System.out.println(credential.getUser());
         return repository.save(credential);
     }
 

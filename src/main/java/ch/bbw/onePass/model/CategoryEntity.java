@@ -1,8 +1,10 @@
 package ch.bbw.onePass.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +16,6 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity(name = "CATEGORY")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(value = {"user"})
 public class CategoryEntity {
 
     public CategoryEntity(String name, UserEntity user) {
@@ -31,7 +31,6 @@ public class CategoryEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     UserEntity user;

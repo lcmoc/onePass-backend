@@ -32,7 +32,6 @@ public class UserService {
         if (repository.existsByEmail(userEntity.getEmail())) {
             throw new RuntimeException("E-Mail already exists");
         }
-
         return repository.save(userEntity);
     }
 

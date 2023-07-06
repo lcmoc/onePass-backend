@@ -80,7 +80,7 @@ public class CategoryController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)  // HTTP 201
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(category);
+                .build();
     }
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
@@ -91,7 +91,7 @@ public class CategoryController {
         categoryService.create(category);
         return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(category);
+                .build();
     }
 
     @CrossOrigin(origins = {"http://localhost:3000/"})
@@ -100,9 +100,6 @@ public class CategoryController {
     deleteCategory(@PathVariable Long id) {
         Optional<CategoryEntity> category = categoryService.loadOne(id);
         List<CredentialsEntity> credentials = credentialsService.getCredentialsByCategoryId(category.get().getId());
-
-        // Delete the credentials
-
 
         if (category.isPresent()) {
             for (CredentialsEntity credential : credentials) {

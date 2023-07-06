@@ -52,4 +52,17 @@ public class CredentialsService {
         return repository.findByCategoryUserId(userId);
     }
 
+    public void deleteByUserId(Long userId) {
+        repository.deleteByCategory_User_Id(userId);
+    }
+
+    public void deleteByCategoryId(Long categoryId) {
+        repository.deleteByCategoryId(categoryId);
+    }
+
+    public List<CredentialsEntity> getCredentialsByCategoryId(Long categoryId) {
+        return repository.findByCategory_Id(categoryId);
+    }
+
+
 }

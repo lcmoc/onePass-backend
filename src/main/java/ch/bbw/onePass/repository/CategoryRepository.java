@@ -12,4 +12,6 @@ public interface CategoryRepository extends CrudRepository<CategoryEntity, Long>
 
     List<CategoryEntity> findByUser_Id(int userId);
 
+    void deleteByUserId(Long userId);
+
 }

@@ -1,5 +1,7 @@
 package ch.bbw.onePass.controller;
 
+import ch.bbw.onePass.service.CategoryService;
+import ch.bbw.onePass.service.CredentialsService;
 import ch.bbw.onePass.service.UserService;
 import ch.bbw.onePass.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,17 +9,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Controller
 public class UserController {
+    private final CredentialsService credentialsService;
+    private final CategoryService categoryService;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService studentService) {
+    public UserController(CredentialsService credentialsService, CategoryService categoryService, UserService studentService) {
+        this.credentialsService = credentialsService;
+        this.categoryService = categoryService;
         this.userService = studentService;
     }
 
@@ -88,6 +96,8 @@ public class UserController {
         Optional<UserEntity> user = userService.loadOne(id);
 
         if (user.isPresent()) {
+            credentialsService.deleteByUserId(id);
+            categoryService.deleteByUserId(id);
             userService.delete(id);
             return ResponseEntity.noContent().build();  // HTTP 204
         } else {

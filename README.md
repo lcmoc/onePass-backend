@@ -8,32 +8,6 @@ This repository contains the source code for the OnePass API, which provides end
 
 #### GET
 
-##### Get all users
-
-- URL: `/users`
-- Method: `POST`
-- Response:
-
-```
-[
-  {
-    "id": 1,
-    "secretKey": "secret1",
-    "email": "user1@example.com"
-  },
-  {
-    "id": 2,
-    "secretKey": "secret2",
-    "email": "user2@example.com"
-  },
-  {
-    "id": 3,
-    "secretKey": "secret3",
-    "email": "user3@example.com"
-  }
-]
-```
-
 ##### Get user by email
 
 - URL: `/users/email={email}`
@@ -43,33 +17,22 @@ This repository contains the source code for the OnePass API, which provides end
 
 ```
 {
-  "id": 1,
-  "secretKey": "secret1",
-  "email": "user1@example.com"
+    "user": {
+        "id": 1,
+        "secretKey": "new secret",
+        "email": "user1@example.com"
+    },
+    "uuid": "tFAdUMiXnq6mYGaLj8SL/d2D5N1+hrPNAGLnIZoF5JisawEiuI97XMk175kSm39B"
 }
-```
-
-##### Get all emails
-
-- URL: `/users/emails`
-- Method: `POST`
-- Response:
-
-```
-[
-    "user1@example.com",
-    "user2@example.com",
-    "user3@example.com",
-    "user1@exam.com"
-]
 ```
 
 #### CREATE
 
 ##### Create user
 
-- URL: `/users`
+- URL: `/users?uuid=4d9e6260-79de-468a-bd6d-94648fde9458`
 - Method: `POST`
+- Requires decrypted uuid
 - Input:
 
 ```
@@ -83,8 +46,9 @@ This repository contains the source code for the OnePass API, which provides end
 
 ##### Update user
 
-- URL: `/users/{id}`
+- URL: `/users/{id}?uuid=4d9e6260-79de-468a-bd6d-94648fde9458`
 - Method: `PUT`
+- Requires decrypted uuid
 - Input:
 
 ```
@@ -99,51 +63,28 @@ This repository contains the source code for the OnePass API, which provides end
 
 ##### Delete user
 
-- URL: `/users/{id}`
+- URL: `/users/{id}?uuid=4d9e6260-79de-468a-bd6d-94648fde9458`
 - Method: `DELETE`
+- Requires decrypted uuid
 
 ### Category Controller
 
 #### GET
 
-##### Get all categories
 
-- URL: `/categories`
+
+##### Get categories by id
+
+- URL: `/categories/user/1?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `POST`
-- Response:
-
-```
-[
-  {
-    "id": 1,
-    "name": "Category 1"
-  },
-  {
-    "id": 2,
-    "name": "Category 2"
-  },
-  {
-    "id": 3,
-    "name": "Category 3"
-  },
-  {
-    "id": 4,
-    "name": "Category 4"
-  }
-]
-```
-
-##### Get categories by name
-
-- URL: `/categories/name={name}`
-- Method: `POST`
+- Requires decrypted uuid
 - Response:
 
 ```
 {
-    "id": 3,
-    "name": "Category 3",
-    "user_id": 2
+    "id": 1,
+    "name": "Category 1",
+    "user_id": 1
 }
 ```
 
@@ -151,8 +92,9 @@ This repository contains the source code for the OnePass API, which provides end
 
 ##### Update category
 
-- URL: `/categories/{id}`
+- URL: `/categories/{id}?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `PUT`
+- Requires decrypted uuid
 - Input:
 
 ```
@@ -167,129 +109,17 @@ This repository contains the source code for the OnePass API, which provides end
 
 ##### Delete category
 
-- URL: `/categories/{id}`
+- URL: `/categories/{id}?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `DELETE`
+- Requires decrypted uuid
 
 ### Credentials Controller
 
 #### GET
 
-##### Get all credentials
-
-- URL: `/credentials`
-- Method: `POST`
-- Response:
-  - Body: JSON array of CredentialsEntity objects with password field set to `null`
-
-```
-[
-    {
-        "id": 1,
-        "username": "user5",
-        "email": "user1@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 1",
-        "category": {
-            "id": 1,
-            "name": "Category 1",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    },
-    {
-        "id": 2,
-        "username": "user2",
-        "email": "user2@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 2",
-        "category": {
-            "id": 1,
-            "name": "Category 1",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    },
-    {
-        "id": 3,
-        "username": "user3",
-        "email": "user3@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 3",
-        "category": {
-            "id": 2,
-            "name": "Category 2",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    },
-    {
-        "id": 4,
-        "username": "user4",
-        "email": "user4@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 4",
-        "category": {
-            "id": 2,
-            "name": "Category 2",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    }
-]
-```
-
-##### Get credential by ID
-
-- URL: `/credentials/{id}`
-- Method: `POST`
-- Response:
-  - Body: JSON object of the requested CredentialsEntity with password field set to `null`
-  - Status: 404 Not Found (if the credential with the given ID does not exist)
-
-```
-{
-    "id": 1,
-    "username": "user5",
-    "email": "user1@example.com",
-    "password": null,
-    "url": "https://example.com",
-    "notice": "Note 1",
-    "category": {
-        "id": 1,
-        "name": "Category 1",
-        "user_id": 1
-    },
-    "user": {
-        "id": 1,
-        "secretKey": "secret1",
-        "email": "user1@example.com"
-    }
-}
-```
-
 #### Get password for a credential
 
-- URL: `/credentials/{id}/password`
+- URL: `/credentials/{id}/password?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `POST`
 - Response:
   - Body: Text/plain with the password of the requested credential
@@ -300,94 +130,37 @@ password1
 
 ##### Get credentials by user id
 
-- URL: `/credentials/user/{id}`
+- URL: `/credentials/user/{id}?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `POST`
+- Requires decrypted uuid
 - Response:
   - Returns only credentials with the given user id
 
 ```
-[
-    {
-        "id": 1,
-        "username": "user5",
-        "email": "user1@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 1",
-        "category": {
-            "id": 1,
-            "name": "Category 1",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    },
-    {
+  {
+    "id": 3,
+    "name": "name3",
+    "username": "user3",
+    "email": "user3@example.com",
+    "password": "password3",
+    "url": "https://example.com",
+    "notice": "Note 3",
+    "category": {
         "id": 2,
-        "username": "user2",
-        "email": "user2@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 2",
-        "category": {
-            "id": 1,
-            "name": "Category 1",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
+        "name": "Category 2",
+        "user_id": 1
     },
-    {
-        "id": 3,
-        "username": "user3",
-        "email": "user3@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 3",
-        "category": {
-            "id": 2,
-            "name": "Category 2",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    },
-    {
-        "id": 4,
-        "username": "user4",
-        "email": "user4@example.com",
-        "password": null,
-        "url": "https://example.com",
-        "notice": "Note 4",
-        "category": {
-            "id": 2,
-            "name": "Category 2",
-            "user_id": 1
-        },
-        "user": {
-            "id": 1,
-            "secretKey": "secret1",
-            "email": "user1@example.com"
-        }
-    }
-]
+    "user_id": 1
+  }
 ```
 
 #### CREATE
 
 ##### Create credentials
 
-- URL: `/credentials`
+- URL: `/credentials?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `POST`
+- Requires decrypted uuid
 - Input:
   - The user_id from the category must be equal to the id of the user, because one category can only be assigned to one user
 
@@ -411,8 +184,9 @@ password1
 
 ##### Update credentials
 
-- URL: `/credentials/{id}`
+- URL: `/credentials/{id}?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
 - Method: `PUT`
+- Requires decrypted uuid
 - Input:
   - The user_id from the category must be equal to the id of the user, because one category can only be assigned to one user
   - If there are no new changes, the server will not do a update
@@ -442,9 +216,9 @@ password1
 
 ##### Delete credential
 
-- URL: `/credentials/{id}`
+- URL: `/credentials/{id}?uuid=f222c0fb-2fe4-402b-b4a6-51502a0869bd`
+- Requires decrypted uuid
 - Method: `DELETE`
-
 
 ## Technologies Used
 

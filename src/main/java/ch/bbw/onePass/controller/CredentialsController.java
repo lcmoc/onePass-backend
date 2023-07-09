@@ -1,6 +1,6 @@
 package ch.bbw.onePass.controller;
 
-import ch.bbw.onePass.model.CategoryEntity;
+import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
@@ -11,21 +11,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class CredentialsController {
     private final CredentialsService credentialsService;
-    private final CategoryService categoryService;
+
+    private List<CredentialsReturn> mapCredentialsToCredentialsReturnList(List<CredentialsEntity> credentials) {
+        List<CredentialsReturn> credentialsReturnList = new ArrayList<>();
+        for (CredentialsEntity credential : credentials) {
+            CredentialsReturn credentialsReturn = new CredentialsReturn(
+                    credential.getId(),
+                    credential.getUsername(),
+                    credential.getEmail(),
+                    credential.getPassword(),
+                    credential.getUrl(),
+                    credential.getNotice(),
+                    credential.getName(),
+                    credential.getUser().getId(),
+                    credential.getCategory().getId()
+            );
+            credentialsReturnList.add(credentialsReturn);
+        }
+        return credentialsReturnList;
+    }
 
     @Autowired
     public  CredentialsController(CredentialsService credentialsService, CategoryService categoryService) {
         this.credentialsService = credentialsService;
-        this.categoryService = categoryService;
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials")
     public ResponseEntity<List<CredentialsEntity>> getCredentials() {
         List<CredentialsEntity> credentials = credentialsService.loadAll();
@@ -40,7 +57,6 @@ public class CredentialsController {
                 .body(credentials);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/{id}")
     public ResponseEntity<CredentialsEntity> getCredentialById(@PathVariable Long id) {
         CredentialsEntity credential = credentialsService.getCredentialById(id);
@@ -58,7 +74,6 @@ public class CredentialsController {
                 .body(credential);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/{id}/password")
     public ResponseEntity<String> getPassword(@PathVariable("id") Long id) {
         String password = credentialsService.getPasswordById(id);
@@ -69,31 +84,7 @@ public class CredentialsController {
                 .body(password);
     }
 
-
-    public boolean checkIds(CredentialsEntity credential) {
-        Long categoryId = credential.getCategory().getId();
-        CategoryEntity category = categoryService.getCategoryById(categoryId);
-
-        if (category == null) {
-            return false;
-        }
-
-        Long userId = credential.getCategory().getUser().getId();
-        Long categoryUserId = category.getUser().getId();
-
-        boolean areIdsNotEmpty = userId != null && categoryUserId != null;
-        boolean areUserIdsEqual = userId.equals(categoryUserId);
-
-        if (areIdsNotEmpty && areUserIdsEqual) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/credentials")
-
     public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
 
         if (credential != null) {
@@ -111,8 +102,7 @@ public class CredentialsController {
     }
 
     // extra update for password?
-    @CrossOrigin(origins = {"http://localhost:3000/"})
-    @PutMapping("/credentials/{id}")    
+    @PutMapping("/credentials/{id}")
     public ResponseEntity<CredentialsEntity>
     updateCredential(@RequestBody CredentialsEntity credential) {
         Optional<CredentialsEntity> existingCredential = credentialsService.loadOne(credential.getId());
@@ -120,7 +110,6 @@ public class CredentialsController {
         if(!existingCredential.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
 
         if(existingCredential.equals(credential)) {
             // check if the equals works (doesn't seem like it)
@@ -134,7 +123,6 @@ public class CredentialsController {
                 .build();
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/credentials/{id}")
     public ResponseEntity<?>
     deleteCredential(@PathVariable Long id) {
@@ -148,14 +136,14 @@ public class CredentialsController {
         }
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/credentials/user/{userId}")
-    public ResponseEntity<List<CredentialsEntity>> getCredentialsByUserId(@PathVariable("userId") int userId) {
+    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") int userId) {
         List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId((long) userId);
+        List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
 
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(credentials);
+                .body(credentialsReturnList);
     }
 }

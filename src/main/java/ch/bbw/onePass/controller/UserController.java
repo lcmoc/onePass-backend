@@ -36,8 +36,6 @@ public class UserController {
         this.userService = studentService;
     }
 
-    @PostMapping("/allUsers")
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/users")
     public ResponseEntity<List<UserEntity>> getUsers() {
         return ResponseEntity
@@ -46,27 +44,6 @@ public class UserController {
                 .body(userService.loadAll());
     }
 
-    public static boolean decryptSecretKey(String password, String encryptedSecretKey) {
-        try {
-            byte[] key = password.getBytes("UTF-8");
-            SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-
-            byte[] encryptedBytes = Base64.decodeBase64(encryptedSecretKey);
-
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-
-            String decryptedSecretKey = new String(decryptedBytes, "UTF-8");
-            System.out.println("Decrypted Secret Key: " + decryptedSecretKey);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Failed to decrypt: " + e);
-            return false;
-        }
-    }
-
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/users/email={email}")
     public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email) {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);
@@ -82,8 +59,6 @@ public class UserController {
         return ResponseEntity.ok(userUuidDto);
     }
 
-
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/users")
     public ResponseEntity<UserEntity>
     addUser(@RequestBody UserEntity user) {
@@ -95,7 +70,6 @@ public class UserController {
                 .body(user);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/users")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
@@ -116,8 +90,6 @@ public class UserController {
                 .body(user);
     }
 
-
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {
@@ -133,7 +105,6 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("users/emails")
     public ResponseEntity<List<String>> getAllEmails() {
         List<String> emails = userService.getAllEmails();

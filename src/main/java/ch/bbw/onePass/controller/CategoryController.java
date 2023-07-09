@@ -1,8 +1,8 @@
 package ch.bbw.onePass.controller;
 
+import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
-import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +23,25 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final CredentialsService credentialsService;
 
+    private List<CategoryReturn> mapCategoriesToCategoriesReturnList(List<CategoryEntity> categories) {
+        List<CategoryReturn> categoryReturnList = new ArrayList<>();
+        for (CategoryEntity category : categories) {
+            CategoryReturn categoryReturn = new CategoryReturn(
+                    category.getId(),
+                    category.getName(),
+                    category.getUser_id()
+            );
+            categoryReturnList.add(categoryReturn);
+        }
+        return categoryReturnList;
+    }
+
     @Autowired
     public CategoryController(CategoryService categoryService, CredentialsService credentialsService) {
         this.categoryService = categoryService;
         this.credentialsService = credentialsService;
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryEntity>> getCategories() {
         return ResponseEntity
@@ -37,7 +50,6 @@ public class CategoryController {
                 .body(categoryService.loadAll());
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/name={name}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByName(@PathVariable String name) {
         Optional<CategoryEntity> user = categoryService.getByName(name);
@@ -54,12 +66,11 @@ public class CategoryController {
                 .body(user);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/{id}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
-        CategoryEntity user = categoryService.getCategoryById(id);
+        CategoryEntity category = categoryService.getCategoryById(id);
 
-        if (user == null) {
+        if (category == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .build();
@@ -68,10 +79,9 @@ public class CategoryController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Optional.of(user));
+                .body(Optional.of(category));
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
     addCategory(@RequestBody CategoryEntity category) {
@@ -83,7 +93,6 @@ public class CategoryController {
                 .build();
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryEntity>
     updateCategory(@RequestBody CategoryEntity category) {
@@ -94,7 +103,6 @@ public class CategoryController {
                 .build();
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?>
     deleteCategory(@PathVariable Long id) {
@@ -112,15 +120,15 @@ public class CategoryController {
         }
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/user/{userId}")
-    public ResponseEntity<List<CategoryEntity>> getCategoriesByUserId(@PathVariable("userId") int userId) {
+    public ResponseEntity<List<CategoryReturn>> getCategoriesByUserId(@PathVariable("userId") int userId) {
         List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);
+        List<CategoryReturn> categoryReturnList = mapCategoriesToCategoriesReturnList(categories);
 
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(categories);
+                .body(categoryReturnList);
     }
 
 }

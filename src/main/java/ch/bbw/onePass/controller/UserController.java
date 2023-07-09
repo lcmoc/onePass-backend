@@ -1,6 +1,4 @@
 package ch.bbw.onePass.controller;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 
 import ch.bbw.onePass.helpers.UserUuidDto;
 import ch.bbw.onePass.helpers.UuidSingleton;
@@ -8,7 +6,7 @@ import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
 import ch.bbw.onePass.service.UserService;
 import ch.bbw.onePass.model.UserEntity;
-import org.apache.commons.codec.binary.Base64;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,8 +40,8 @@ public class UserController {
                 .body(userService.loadAll());
     }
 
-    @PostMapping("/users/email={email}")
-    public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email) {
+    @GetMapping("/users/email={email}")
+    public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email, HttpSession session) {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);
 
         if (optionalUser.isEmpty()) {
@@ -56,7 +52,15 @@ public class UserController {
         UserEntity user = optionalUser.get();
         UserUuidDto userUuidDto = new UserUuidDto(user, uuid);
 
+        session.setAttribute("uuid", uuid.toString());
+
         return ResponseEntity.ok(userUuidDto);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logoutUser(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/users")

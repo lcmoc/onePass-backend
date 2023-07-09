@@ -1,4 +1,5 @@
 package ch.bbw.onePass.helpers;
+
 import java.util.UUID;
 
 public class UuidSingleton {

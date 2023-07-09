@@ -1,16 +1,17 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
+import ch.bbw.onePass.helpers.UUIDUtils;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class CredentialsController {
     }
 
     @Autowired
-    public  CredentialsController(CredentialsService credentialsService, CategoryService categoryService) {
+    public CredentialsController(CredentialsService credentialsService, CategoryService categoryService) {
         this.credentialsService = credentialsService;
     }
 
@@ -107,11 +108,11 @@ public class CredentialsController {
     updateCredential(@RequestBody CredentialsEntity credential) {
         Optional<CredentialsEntity> existingCredential = credentialsService.loadOne(credential.getId());
 
-        if(!existingCredential.isPresent()) {
+        if (!existingCredential.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        if(existingCredential.equals(credential)) {
+        if (existingCredential.equals(credential)) {
             // check if the equals works (doesn't seem like it)
             // implement correct response entity
             throw new RuntimeException("Nothing changed");
@@ -137,13 +138,19 @@ public class CredentialsController {
     }
 
     @GetMapping("/credentials/user/{userId}")
-    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") int userId) {
+    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") int userId, @RequestParam("uuid") String frontendUuid, HttpSession session) {
         List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId((long) userId);
         List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
 
-        return ResponseEntity
-                .status(HttpStatus.OK) // HTTP 200
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(credentialsReturnList);
+        String sessionUuidString = (String) session.getAttribute("uuid");
+        if (sessionUuidString != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString)) {
+            return ResponseEntity
+                    .status(HttpStatus.OK) // HTTP 200
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(credentialsReturnList);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
 }

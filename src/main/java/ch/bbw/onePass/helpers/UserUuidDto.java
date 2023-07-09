@@ -1,7 +1,6 @@
 package ch.bbw.onePass.helpers;
 
 import ch.bbw.onePass.model.UserEntity;
-
 import java.util.UUID;
 
 public class UserUuidDto {

@@ -1,7 +1,6 @@
 package ch.bbw.onePass.JsonReturnModels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
 public class CredentialsReturn {
     public CredentialsReturn(Long id, String username, String email, String password, String url, String notice, String name, Long userId, Long categoryId) {
         this.id = id;

@@ -1,7 +1,6 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
-import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
@@ -86,7 +85,6 @@ public class CredentialsController {
     }
 
     @PostMapping("/credentials")
-
     public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential) {
 
         if (credential != null) {
@@ -112,7 +110,6 @@ public class CredentialsController {
         if(!existingCredential.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
 
         if(existingCredential.equals(credential)) {
             // check if the equals works (doesn't seem like it)
@@ -143,7 +140,6 @@ public class CredentialsController {
     public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") int userId) {
         List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId((long) userId);
         List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
-
 
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200

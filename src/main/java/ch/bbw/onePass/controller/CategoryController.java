@@ -1,10 +1,8 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
-import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
-import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
 import org.springframework.beans.factory.annotation.Autowired;

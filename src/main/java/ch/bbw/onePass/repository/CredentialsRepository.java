@@ -13,4 +13,3 @@ public interface CredentialsRepository extends CrudRepository<CredentialsEntity,
     List<CredentialsEntity> findByCategory_Id(Long categoryId);
 
 }
-

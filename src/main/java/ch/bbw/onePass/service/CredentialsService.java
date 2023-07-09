@@ -1,7 +1,6 @@
 package ch.bbw.onePass.service;
 
 import ch.bbw.onePass.model.CredentialsEntity;
-import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.repository.CredentialsRepository;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +63,4 @@ public class CredentialsService {
     public List<CredentialsEntity> getCredentialsByCategoryId(Long categoryId) {
         return repository.findByCategory_Id(categoryId);
     }
-
-
 }

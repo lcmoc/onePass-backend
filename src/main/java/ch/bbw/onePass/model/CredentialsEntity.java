@@ -1,14 +1,11 @@
 package ch.bbw.onePass.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.apache.catalina.User;
 
 @Getter
 @Setter

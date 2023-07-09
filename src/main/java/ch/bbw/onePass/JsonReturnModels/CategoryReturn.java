@@ -1,8 +1,6 @@
 package ch.bbw.onePass.JsonReturnModels;
 
-import ch.bbw.onePass.model.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 
 public class CategoryReturn {
     public CategoryReturn(Long id, String name, Long userId) {

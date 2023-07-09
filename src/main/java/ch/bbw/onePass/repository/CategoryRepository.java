@@ -1,7 +1,6 @@
 package ch.bbw.onePass.repository;
 
 import ch.bbw.onePass.model.CategoryEntity;
-import ch.bbw.onePass.model.CredentialsEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

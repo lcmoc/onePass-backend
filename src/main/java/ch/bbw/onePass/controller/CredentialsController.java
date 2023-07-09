@@ -138,12 +138,15 @@ public class CredentialsController {
     }
 
     @GetMapping("/credentials/user/{userId}")
-    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") int userId, @RequestParam("uuid") String frontendUuid, HttpSession session) {
-        List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId((long) userId);
+    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+        List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId(userId);
         List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
 
         String sessionUuidString = (String) session.getAttribute("uuid");
-        if (sessionUuidString != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString)) {
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(userId);
+
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
             return ResponseEntity
                     .status(HttpStatus.OK) // HTTP 200
                     .contentType(MediaType.APPLICATION_JSON)

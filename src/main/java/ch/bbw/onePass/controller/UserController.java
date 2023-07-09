@@ -1,5 +1,6 @@
 package ch.bbw.onePass.controller;
 
+import ch.bbw.onePass.helpers.UUIDUtils;
 import ch.bbw.onePass.helpers.UserUuidDto;
 import ch.bbw.onePass.helpers.UuidSingleton;
 import ch.bbw.onePass.service.CategoryService;
@@ -53,6 +54,7 @@ public class UserController {
         UserUuidDto userUuidDto = new UserUuidDto(user, uuid);
 
         session.setAttribute("uuid", uuid.toString());
+        session.setAttribute("userId", user.getId());
 
         return ResponseEntity.ok(userUuidDto);
     }
@@ -81,40 +83,54 @@ public class UserController {
                 .body(user);
     }
 
-
     @PutMapping("/users")
-    public ResponseEntity<?>
-    updateUser(@RequestBody UserEntity user) {
-        Optional<UserEntity> existingUser = userService.loadOne(user.getId());
+    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+        String sessionUuidString = (String) session.getAttribute("uuid");
 
-        if(!existingUser.isPresent()) {
-            return ResponseEntity.notFound().build();
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(user.getId());
+
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+            Optional<UserEntity> existingUser = userService.loadOne(user.getId());
+
+            if (!existingUser.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            if (existingUser.get().equals(user)) {
+                throw new RuntimeException("Nothing changed");
+            }
+
+            userService.update(user);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(user);
         }
 
-        if(existingUser.equals(user)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT) // HTTP 409 - Konflikt
-                    .body("Nothing changed");
-        }
-
-        userService.update(user);
-        return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(user);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<?>
-    deleteUser(@PathVariable Long id) {
-        Optional<UserEntity> user = userService.loadOne(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+        String sessionUuidString = (String) session.getAttribute("uuid");
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(id);
 
-        if (user.isPresent()) {
-            credentialsService.deleteByUserId(id);
-            categoryService.deleteByUserId(id);
-            userService.delete(id);
-            return ResponseEntity.noContent().build();  // HTTP 204
-        } else {
-            return ResponseEntity.notFound().build();   // HTTP 404
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+            Optional<UserEntity> user = userService.loadOne(id);
+
+            if (user.isPresent()) {
+                //TODO: delete all
+                credentialsService.deleteByUserId(id);
+                categoryService.deleteByUserId(id);
+                userService.delete(id);
+                return ResponseEntity.noContent().build(); // HTTP 204
+            } else {
+                return ResponseEntity.notFound().build(); // HTTP 404
+            }
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // HTTP 401
     }
 
     @GetMapping("users/emails")

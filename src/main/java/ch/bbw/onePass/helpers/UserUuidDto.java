@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public class UserUuidDto {
     private UserEntity user;
-    private UUID uuid;
+    private String uuid;
 
-    public UserUuidDto(UserEntity user, UUID uuid) {
+    public UserUuidDto(UserEntity user, String uuid) {
         this.user = user;
         this.uuid = uuid;
     }
@@ -16,7 +16,7 @@ public class UserUuidDto {
         return user;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 }

@@ -1,5 +1,7 @@
 package ch.bbw.onePass.controller;
 
+import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
+import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.model.UserEntity;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,19 @@ import java.util.Optional;
 public class CategoryController {
     private final CategoryService categoryService;
     private final CredentialsService credentialsService;
+
+    private List<CategoryReturn> mapCategoriesToCategoriesReturnList(List<CategoryEntity> categories) {
+        List<CategoryReturn> categoryReturnList = new ArrayList<>();
+        for (CategoryEntity category : categories) {
+            CategoryReturn categoryReturn = new CategoryReturn(
+                    category.getId(),
+                    category.getName(),
+                    category.getUser_id()
+            );
+            categoryReturnList.add(categoryReturn);
+        }
+        return categoryReturnList;
+    }
 
     @Autowired
     public CategoryController(CategoryService categoryService, CredentialsService credentialsService) {
@@ -54,9 +70,9 @@ public class CategoryController {
 
     @GetMapping("/categories/{id}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
-        CategoryEntity user = categoryService.getCategoryById(id);
+        CategoryEntity category = categoryService.getCategoryById(id);
 
-        if (user == null) {
+        if (category == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .build();
@@ -65,7 +81,7 @@ public class CategoryController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Optional.of(user));
+                .body(Optional.of(category));
     }
 
     @PostMapping("/categories")
@@ -107,13 +123,14 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/user/{userId}")
-    public ResponseEntity<List<CategoryEntity>> getCategoriesByUserId(@PathVariable("userId") int userId) {
+    public ResponseEntity<List<CategoryReturn>> getCategoriesByUserId(@PathVariable("userId") int userId) {
         List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);
+        List<CategoryReturn> categoryReturnList = mapCategoriesToCategoriesReturnList(categories);
 
         return ResponseEntity
                 .status(HttpStatus.OK) // HTTP 200
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(categories);
+                .body(categoryReturnList);
     }
 
 }

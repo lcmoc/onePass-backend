@@ -41,46 +41,6 @@ public class CategoryController {
         this.credentialsService = credentialsService;
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryEntity>> getCategories() {
-        return ResponseEntity
-                .status(HttpStatus.OK) // HTTP 200
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(categoryService.loadAll());
-    }
-
-    @GetMapping("/categories/name={name}")
-    public ResponseEntity<Optional<CategoryEntity>> getCategoryByName(@PathVariable String name) {
-        Optional<CategoryEntity> user = categoryService.getByName(name);
-
-        if (user == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(user);
-    }
-
-    @GetMapping("/categories/{id}")
-    public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
-        CategoryEntity category = categoryService.getCategoryById(id);
-
-        if (category == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Optional.of(category));
-    }
-
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
     addCategory(@RequestBody CategoryEntity category) {

@@ -32,15 +32,7 @@ public class UserController {
         this.categoryService = categoryService;
         this.userService = studentService;
     }
-
-    @GetMapping("/users")
-    public ResponseEntity<List<UserEntity>> getUsers() {
-        return ResponseEntity
-                .status(HttpStatus.OK) // HTTP 200
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(userService.loadAll());
-    }
-
+    
     @GetMapping("/users/email={email}")
     public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email, HttpSession session) {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);
@@ -132,11 +124,5 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // HTTP 401
-    }
-
-    @GetMapping("users/emails")
-    public ResponseEntity<List<String>> getAllEmails() {
-        List<String> emails = userService.getAllEmails();
-        return ResponseEntity.ok(emails);
     }
 }

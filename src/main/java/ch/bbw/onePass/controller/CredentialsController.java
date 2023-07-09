@@ -44,37 +44,6 @@ public class CredentialsController {
         this.credentialsService = credentialsService;
     }
 
-    @GetMapping("/credentials")
-    public ResponseEntity<List<CredentialsEntity>> getCredentials() {
-        List<CredentialsEntity> credentials = credentialsService.loadAll();
-
-        for (CredentialsEntity credential : credentials) {
-            credential.setPassword(null);
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK) // HTTP 200
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(credentials);
-    }
-
-    @GetMapping("/credentials/{id}")
-    public ResponseEntity<CredentialsEntity> getCredentialById(@PathVariable Long id) {
-        CredentialsEntity credential = credentialsService.getCredentialById(id);
-        if (credential == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
-
-        credential.setPassword(null);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(credential);
-    }
-
     @GetMapping("/credentials/{id}/password")
     public ResponseEntity<String> getPassword(@PathVariable("id") Long id, @RequestParam("uuid") String frontendUuid, HttpSession session) {
         String password = credentialsService.getPasswordById(id);

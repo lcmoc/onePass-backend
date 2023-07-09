@@ -72,7 +72,7 @@ public class UserController {
         Optional<UserEntity> optionalUser = userService.getByEmail(userEmail);
 
         if(optionalUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT) // HTTP 409 - Konflikt
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body("Email already exists");
         }
 
@@ -98,7 +98,8 @@ public class UserController {
             }
 
             if (existingUser.get().equals(user)) {
-                throw new RuntimeException("Nothing changed");
+                ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("Nothing changed");
             }
 
             userService.update(user);

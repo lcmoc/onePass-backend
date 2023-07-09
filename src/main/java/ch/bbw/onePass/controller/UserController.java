@@ -64,18 +64,26 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserEntity>
-    addUser(@RequestBody UserEntity user) {
+    public ResponseEntity<?> addUser(@RequestBody UserEntity user) {
+
+        String userEmail = user.getEmail();
+        Optional<UserEntity> optionalUser = userService.getByEmail(userEmail);
+
+        if(optionalUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT) // HTTP 409 - Konflikt
+                    .body("Email already exists");
+        }
 
         userService.create(user);
         return ResponseEntity
-                .status(HttpStatus.CREATED)  // HTTP 201
+                .status(HttpStatus.CREATED) // HTTP 201 - Erstellt
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(user);
     }
 
+
     @PutMapping("/users")
-    public ResponseEntity<UserEntity>
+    public ResponseEntity<?>
     updateUser(@RequestBody UserEntity user) {
         Optional<UserEntity> existingUser = userService.loadOne(user.getId());
 
@@ -84,8 +92,8 @@ public class UserController {
         }
 
         if(existingUser.equals(user)) {
-            // implement correct response entity
-            throw new RuntimeException("Nothing changed");
+            return ResponseEntity.status(HttpStatus.CONFLICT) // HTTP 409 - Konflikt
+                    .body("Nothing changed");
         }
 
         userService.update(user);

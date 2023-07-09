@@ -29,7 +29,6 @@ public class UserController {
         this.userService = studentService;
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/users")
     public ResponseEntity<List<UserEntity>> getUsers() {
         return ResponseEntity
@@ -38,7 +37,6 @@ public class UserController {
                 .body(userService.loadAll());
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/users/email={email}")
     public ResponseEntity<Optional<UserEntity>> getUserByEmail(@PathVariable String email) {
         Optional<UserEntity> user = userService.getByEmail(email);
@@ -55,7 +53,6 @@ public class UserController {
                 .body(user);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/users")
     public ResponseEntity<UserEntity>
     addUser(@RequestBody UserEntity user) {
@@ -67,7 +64,6 @@ public class UserController {
                 .body(user);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/users")
     public ResponseEntity<UserEntity>
     updateUser(@RequestBody UserEntity user) {
@@ -88,8 +84,6 @@ public class UserController {
                 .body(user);
     }
 
-
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?>
     deleteUser(@PathVariable Long id) {
@@ -105,7 +99,6 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("users/emails")
     public ResponseEntity<List<String>> getAllEmails() {
         List<String> emails = userService.getAllEmails();

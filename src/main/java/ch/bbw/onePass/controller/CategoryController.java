@@ -28,7 +28,6 @@ public class CategoryController {
         this.credentialsService = credentialsService;
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryEntity>> getCategories() {
         return ResponseEntity
@@ -37,7 +36,6 @@ public class CategoryController {
                 .body(categoryService.loadAll());
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/name={name}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByName(@PathVariable String name) {
         Optional<CategoryEntity> user = categoryService.getByName(name);
@@ -54,7 +52,6 @@ public class CategoryController {
                 .body(user);
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/{id}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
         CategoryEntity user = categoryService.getCategoryById(id);
@@ -71,7 +68,6 @@ public class CategoryController {
                 .body(Optional.of(user));
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
     addCategory(@RequestBody CategoryEntity category) {
@@ -83,7 +79,6 @@ public class CategoryController {
                 .build();
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryEntity>
     updateCategory(@RequestBody CategoryEntity category) {
@@ -94,7 +89,6 @@ public class CategoryController {
                 .build();
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?>
     deleteCategory(@PathVariable Long id) {
@@ -112,7 +106,6 @@ public class CategoryController {
         }
     }
 
-    @CrossOrigin(origins = {"http://localhost:3000/"})
     @GetMapping("/categories/user/{userId}")
     public ResponseEntity<List<CategoryEntity>> getCategoriesByUserId(@PathVariable("userId") int userId) {
         List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);

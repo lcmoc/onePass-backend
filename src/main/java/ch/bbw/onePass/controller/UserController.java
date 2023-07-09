@@ -32,7 +32,7 @@ public class UserController {
         this.categoryService = categoryService;
         this.userService = studentService;
     }
-    
+
     @GetMapping("/users/email={email}")
     public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email, HttpSession session) {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);

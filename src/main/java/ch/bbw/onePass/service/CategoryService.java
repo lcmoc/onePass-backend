@@ -39,7 +39,7 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
-    public List<CategoryEntity> getCategoryByUserId(int userId) {
+    public List<CategoryEntity> getCategoryByUserId(Long userId) {
         return repository.findByUser_Id(userId);
     }
 

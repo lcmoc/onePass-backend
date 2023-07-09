@@ -1,10 +1,12 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
+import ch.bbw.onePass.helpers.UUIDUtils;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,93 +43,83 @@ public class CategoryController {
         this.credentialsService = credentialsService;
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryEntity>> getCategories() {
-        return ResponseEntity
-                .status(HttpStatus.OK) // HTTP 200
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(categoryService.loadAll());
-    }
-
-    @GetMapping("/categories/name={name}")
-    public ResponseEntity<Optional<CategoryEntity>> getCategoryByName(@PathVariable String name) {
-        Optional<CategoryEntity> user = categoryService.getByName(name);
-
-        if (user == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(user);
-    }
-
-    @GetMapping("/categories/{id}")
-    public ResponseEntity<Optional<CategoryEntity>> getCategoryByID(@PathVariable Long id) {
-        CategoryEntity category = categoryService.getCategoryById(id);
-
-        if (category == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .build();
-        }
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Optional.of(category));
-    }
-
     @PostMapping("/categories")
     public ResponseEntity<CategoryEntity>
-    addCategory(@RequestBody CategoryEntity category) {
+    addCategory(@RequestBody CategoryEntity category, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+        String sessionUuidString = (String) session.getAttribute("uuid");
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(category.getUser().getId());
 
-        categoryService.create(category);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)  // HTTP 201
-                .contentType(MediaType.APPLICATION_JSON)
-                .build();
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+            categoryService.create(category);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)  // HTTP 201
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryEntity>
-    updateCategory(@RequestBody CategoryEntity category) {
+    updateCategory(@RequestBody CategoryEntity category, @RequestParam("uuid") String frontendUuid, HttpSession session) {
 
-        categoryService.create(category);
-        return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
-                .contentType(MediaType.APPLICATION_JSON)
-                .build();
+        String sessionUuidString = (String) session.getAttribute("uuid");
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(category.getUser().getId());
+
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+            categoryService.create(category);
+            return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?>
-    deleteCategory(@PathVariable Long id) {
+    deleteCategory(@PathVariable Long id, @RequestParam("uuid") String frontendUuid, HttpSession session) {
         Optional<CategoryEntity> category = categoryService.loadOne(id);
         List<CredentialsEntity> credentials = credentialsService.getCredentialsByCategoryId(category.get().getId());
 
-        if (category.isPresent()) {
+        if (!category.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String sessionUuidString = (String) session.getAttribute("uuid");
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(category.get().getUser().getId());
+
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
             for (CredentialsEntity credential : credentials) {
                 credentialsService.delete(credential.getId());
             }
             categoryService.delete(id);
             return ResponseEntity.noContent().build();  // HTTP 204
-        } else {
-            return ResponseEntity.notFound().build();   // HTTP 404
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/categories/user/{userId}")
-    public ResponseEntity<List<CategoryReturn>> getCategoriesByUserId(@PathVariable("userId") int userId) {
+    public ResponseEntity<List<CategoryReturn>> getCategoriesByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid, HttpSession session) {
         List<CategoryEntity> categories = (List<CategoryEntity>) categoryService.getCategoryByUserId(userId);
         List<CategoryReturn> categoryReturnList = mapCategoriesToCategoriesReturnList(categories);
 
-        return ResponseEntity
-                .status(HttpStatus.OK) // HTTP 200
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(categoryReturnList);
-    }
+        String sessionUuidString = (String) session.getAttribute("uuid");
+        Long sessionUserId = (Long) session.getAttribute("userId");
+        boolean userIdsAreEqual = sessionUserId.equals(userId);
 
+        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+            return ResponseEntity
+                    .status(HttpStatus.OK) // HTTP 200
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(categoryReturnList);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }

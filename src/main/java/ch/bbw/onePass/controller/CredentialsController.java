@@ -1,7 +1,9 @@
 package ch.bbw.onePass.controller;
 
+import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
 import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
 import ch.bbw.onePass.helpers.UUIDUtils;
+import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
@@ -23,6 +25,13 @@ public class CredentialsController {
     private List<CredentialsReturn> mapCredentialsToCredentialsReturnList(List<CredentialsEntity> credentials) {
         List<CredentialsReturn> credentialsReturnList = new ArrayList<>();
         for (CredentialsEntity credential : credentials) {
+            CategoryEntity categoryEntity = credential.getCategory();
+            CategoryReturn categoryReturn = new CategoryReturn(
+                    categoryEntity.getId(),
+                    categoryEntity.getName(),
+                    categoryEntity.getUser().getId()
+            );
+
             CredentialsReturn credentialsReturn = new CredentialsReturn(
                     credential.getId(),
                     credential.getUsername(),
@@ -32,7 +41,7 @@ public class CredentialsController {
                     credential.getNotice(),
                     credential.getName(),
                     credential.getUser().getId(),
-                    credential.getCategory().getId()
+                    categoryReturn
             );
             credentialsReturnList.add(credentialsReturn);
         }

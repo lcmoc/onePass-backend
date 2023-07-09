@@ -1,10 +1,11 @@
 package ch.bbw.onePass.JsonReturnModels;
+import ch.bbw.onePass.model.CategoryEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CredentialsReturn {
-    public CredentialsReturn(Long id, String username, String email, String password, String url, String notice, String name, Long userId, Long categoryId) {
+    public CredentialsReturn(Long id, String username, String email, String password, String url, String notice, String name, Long userId, CategoryReturn category) {
         this.id = id;
-        this.categoryId = categoryId;
+        this.category = category;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -35,8 +36,8 @@ public class CredentialsReturn {
     @JsonProperty("notice")
     private String notice;
 
-    @JsonProperty("category_id")
-    private Long categoryId;
+    @JsonProperty("category")
+    private CategoryReturn category;
 
     @JsonProperty("user_id")
     private Long userId;

@@ -34,24 +34,32 @@ public class UserController {
     }
 
     @GetMapping("/users/email={email}")
-    public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email) throws Exception {
+    public ResponseEntity<?> loginUser(@PathVariable String email, @RequestParam("uuid") String frontendUuid) throws Exception {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);
 
-        if (optionalUser.isEmpty()) {
+        if (!optionalUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
+        
         UUID uuid = UuidSingleton.getInstance().getUuid();
         String encryptedUUID = AESUtil.encrypt(uuid.toString());
 
-        UserEntity user = optionalUser.get();
-        UserUuidDto userUuidDto = new UserUuidDto(user.getId(), user.getSecretKey(), user.getEmail(), encryptedUUID);
-        user.setSessionUUID(String.valueOf(uuid));
+        if(frontendUuid.isEmpty()) {
+            optionalUser.get().setSessionUUID(uuid.toString());
+            return ResponseEntity.ok(encryptedUUID);
+        }
 
-        return ResponseEntity.ok(userUuidDto);
+        if (optionalUser.get().getSessionUUID().equals(frontendUuid)) {
+            UserEntity user = optionalUser.get();
+
+            UserUuidDto userUuidDto = new UserUuidDto(user.getId(), user.getSecretKey(), user.getEmail(), encryptedUUID);
+            return ResponseEntity.ok(userUuidDto);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/logout/{id}")
     public ResponseEntity<?> logoutUser(@PathVariable Long id) {
         Optional<UserEntity> user = userService.loadOne(id);
 
@@ -81,51 +89,42 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam("uuid") String frontendUuid, HttpSession session) {
-        String sessionUuidString = (String) session.getAttribute("uuid");
+    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam("uuid") String frontendUuid) {
+        Optional<UserEntity> existingUser = userService.loadOne(user.getId());
 
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(user.getId());
+        if (existingUser.get().getSessionUUID().equals(frontendUuid)) {
 
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
-            Optional<UserEntity> existingUser = userService.loadOne(user.getId());
+                if (!existingUser.isPresent()) {
+                    return ResponseEntity.notFound().build();
+                }
 
-            if (!existingUser.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
+                if (existingUser.get().equals(user)) {
+                    ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("Nothing changed");
+                }
 
-            if (existingUser.get().equals(user)) {
-                ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("Nothing changed");
-            }
-
-            userService.update(user);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(user);
+                userService.update(user);
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(user);
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestParam("uuid") String frontendUuid, HttpSession session) {
-        String sessionUuidString = (String) session.getAttribute("uuid");
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestParam("uuid") String frontendUuid) {
+        Optional<UserEntity> user = userService.loadOne(id);
 
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
-            Optional<UserEntity> user = userService.loadOne(id);
+        if (!user.isPresent()) {
+            return ResponseEntity.notFound().build(); // HTTP 404
+        }
 
-            if (user.isPresent()) {
-                //TODO: delete all
+        if (user.get().getSessionUUID().equals(frontendUuid)) {
                 credentialsService.deleteByUserId(id);
                 categoryService.deleteByUserId(id);
                 userService.delete(id);
                 return ResponseEntity.noContent().build(); // HTTP 204
-            } else {
-                return ResponseEntity.notFound().build(); // HTTP 404
-            }
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // HTTP 401

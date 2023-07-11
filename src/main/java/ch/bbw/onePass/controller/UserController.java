@@ -52,8 +52,13 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logoutUser(HttpSession session) {
-        session.invalidate();
+    public ResponseEntity<?> logoutUser(@PathVariable Long id) {
+        Optional<UserEntity> user = userService.loadOne(id);
+
+        if(user.isPresent()) {
+            user.get().setSessionUUID(null);
+        }
+
         return ResponseEntity.ok().build();
     }
 

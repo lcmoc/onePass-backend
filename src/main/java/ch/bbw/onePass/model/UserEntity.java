@@ -13,9 +13,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity(name = "USER")
 public class UserEntity implements Serializable {
-    public UserEntity(String email, String secretKey) {
+    public UserEntity(String email, String secretKey, String sessionUUID) {
         this.email = email;
         this.secretKey = secretKey;
+        this.sessionUUID = sessionUUID;
     }
 
     @Column(name = "id", updatable = false, nullable = false)
@@ -27,4 +28,7 @@ public class UserEntity implements Serializable {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "session_uuid")
+    private String sessionUUID;
 }

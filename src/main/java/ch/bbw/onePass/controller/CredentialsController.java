@@ -5,8 +5,10 @@ import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
 import ch.bbw.onePass.helpers.UUIDUtils;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
+import ch.bbw.onePass.model.UserEntity;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
+import ch.bbw.onePass.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,14 @@ import java.util.Optional;
 @Controller
 public class CredentialsController {
     private final CredentialsService credentialsService;
+    private final UserService userService;
+
+
+    @Autowired
+    public CredentialsController(CredentialsService credentialsService, UserService userService) {
+        this.credentialsService = credentialsService;
+        this.userService = userService;
+    }
 
     private List<CredentialsReturn> mapCredentialsToCredentialsReturnList(List<CredentialsEntity> credentials) {
         List<CredentialsReturn> credentialsReturnList = new ArrayList<>();
@@ -48,56 +58,32 @@ public class CredentialsController {
         return credentialsReturnList;
     }
 
-    @Autowired
-    public CredentialsController(CredentialsService credentialsService, CategoryService categoryService) {
-        this.credentialsService = credentialsService;
-    }
-
-    @GetMapping("/credentials/{id}/password")
-    public ResponseEntity<String> getPassword(@PathVariable("id") Long id, @RequestParam("uuid") String frontendUuid, HttpSession session) {
-        String password = credentialsService.getPasswordById(id);
-        Optional<CredentialsEntity> credential = credentialsService.loadOne(id);
-
-        String sessionUuidString = (String) session.getAttribute("uuid");
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(credential.get().getUser().getId());
-
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
-            return ResponseEntity
-                    .status(HttpStatus.OK) // HTTP 200
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(password);
-        }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
     @PostMapping("/credentials")
-    public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+    public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid) {
+        Optional<UserEntity> user = userService.loadOne(credential.getUser().getId());
 
-        String sessionUuidString = (String) session.getAttribute("uuid");
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(credential.getUser().getId());
+        if(user.isPresent()) {
+            if (user.get().getSessionUUID().equals(frontendUuid)) {
+                credentialsService.create(credential);
 
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
-            credentialsService.create(credential);
-
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)  // HTTP 201
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .build();
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)  // HTTP 400
-                    .build();
+                return ResponseEntity
+                        .status(HttpStatus.CREATED)  // HTTP 201
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .build();
+            }
         }
+
+    return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)  // HTTP 400
+            .build();
+
     }
 
-    // extra update for password?
     @PutMapping("/credentials/{id}")
     public ResponseEntity<CredentialsEntity>
-    updateCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+    updateCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid) {
         Optional<CredentialsEntity> existingCredential = credentialsService.loadOne(credential.getId());
+        Optional<UserEntity> user = userService.loadOne(credential.getUser().getId());
 
         if (!existingCredential.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -108,11 +94,7 @@ public class CredentialsController {
                     .body("Nothing changed");
         }
 
-        String sessionUuidString = (String) session.getAttribute("uuid");
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(credential.getUser().getId());
-
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+        if(user.get().getSessionUUID().equals(frontendUuid)) {
             credentialsService.update(credential);
             return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
                     .contentType(MediaType.APPLICATION_JSON)
@@ -123,18 +105,15 @@ public class CredentialsController {
 
     @DeleteMapping("/credentials/{id}")
     public ResponseEntity<?>
-    deleteCredential(@PathVariable Long id, @RequestParam("uuid") String frontendUuid, HttpSession session) {
+    deleteCredential(@PathVariable Long id, @RequestParam("uuid") String frontendUuid) {
         Optional<CredentialsEntity> credential = credentialsService.loadOne(id);
+        Optional<UserEntity> user = userService.loadOne(credential.get().getUser().getId());
 
         if (!credential.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        String sessionUuidString = (String) session.getAttribute("uuid");
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(credential.get().getUser().getId());
-
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
+        if(user.get().getSessionUUID().equals(frontendUuid)) {
             credentialsService.delete(id);
             return ResponseEntity.noContent().build();
         }
@@ -143,19 +122,18 @@ public class CredentialsController {
     }
 
     @GetMapping("/credentials/user/{userId}")
-    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid, HttpSession session) {
-        List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId(userId);
-        List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
+    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid) {
+        Optional<UserEntity> user = userService.loadOne(userId);
 
-        String sessionUuidString = (String) session.getAttribute("uuid");
-        Long sessionUserId = (Long) session.getAttribute("userId");
-        boolean userIdsAreEqual = sessionUserId.equals(userId);
-
-        if (sessionUuidString != null && sessionUserId != null && UUIDUtils.compareUUIDs(frontendUuid, sessionUuidString) && userIdsAreEqual) {
-            return ResponseEntity
+        if(user.isPresent()) {
+            if(user.get().getSessionUUID().equals(frontendUuid)) {
+                List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId(userId);
+                List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
+                return ResponseEntity
                     .status(HttpStatus.OK) // HTTP 200
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(credentialsReturnList);
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(credentialsReturnList);
+            }
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

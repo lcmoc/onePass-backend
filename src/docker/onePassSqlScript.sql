@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `onepass`.`user` (
 `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 `email` VARCHAR(45) NOT NULL,
 `secret_key` VARCHAR(145) NULL,
+`session_uuid` VARCHAR(145) NULL,
 PRIMARY KEY (`id`))
     ENGINE = InnoDB;
 

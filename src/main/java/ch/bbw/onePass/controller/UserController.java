@@ -2,7 +2,7 @@ package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.helpers.AESUtil;
 import ch.bbw.onePass.helpers.UUIDUtils;
-import ch.bbw.onePass.helpers.UserUuidDto;
+import ch.bbw.onePass.JsonReturnModels.UserUuidDto;
 import ch.bbw.onePass.helpers.UuidSingleton;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
@@ -34,22 +34,19 @@ public class UserController {
     }
 
     @GetMapping("/users/email={email}")
-    public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email, HttpSession session) throws Exception {
+    public ResponseEntity<UserUuidDto> loginUser(@PathVariable String email) throws Exception {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-
         UUID uuid = UuidSingleton.getInstance().getUuid();
         String encryptedUUID = AESUtil.encrypt(uuid.toString());
 
         UserEntity user = optionalUser.get();
-        UserUuidDto userUuidDto = new UserUuidDto(user, encryptedUUID);
-
-        session.setAttribute("uuid", uuid.toString());
-        session.setAttribute("userId", user.getId());
+        UserUuidDto userUuidDto = new UserUuidDto(user.getId(), user.getSecretKey(), user.getEmail(), encryptedUUID);
+        user.setSessionUUID(String.valueOf(uuid));
 
         return ResponseEntity.ok(userUuidDto);
     }

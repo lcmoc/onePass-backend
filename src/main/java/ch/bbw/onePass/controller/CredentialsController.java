@@ -2,6 +2,7 @@ package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
 import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
+import ch.bbw.onePass.helpers.AESUtil;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.model.UserEntity;
@@ -56,11 +57,11 @@ public class CredentialsController {
     }
 
     @PostMapping("/credentials")
-    public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid) {
-        Optional<UserEntity> user = userService.loadOne(credential.getUser().getId());
+    public ResponseEntity<?> addCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid) throws Exception {
+        Optional<UserEntity> existingUser = userService.loadOne(credential.getUser().getId());
 
-        if(user.isPresent()) {
-            if (user.get().getSessionUUID().equals(frontendUuid)) {
+        if(existingUser.isPresent()) {
+            if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
                 credentialsService.create(credential);
 
                 return ResponseEntity
@@ -78,9 +79,9 @@ public class CredentialsController {
 
     @PutMapping("/credentials/{id}")
     public ResponseEntity<CredentialsEntity>
-    updateCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid) {
+    updateCredential(@RequestBody CredentialsEntity credential, @RequestParam("uuid") String frontendUuid) throws Exception {
         Optional<CredentialsEntity> existingCredential = credentialsService.loadOne(credential.getId());
-        Optional<UserEntity> user = userService.loadOne(credential.getUser().getId());
+        Optional<UserEntity> existingUser = userService.loadOne(credential.getUser().getId());
 
         if (!existingCredential.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -91,7 +92,7 @@ public class CredentialsController {
                     .body("Nothing changed");
         }
 
-        if(user.get().getSessionUUID().equals(frontendUuid)) {
+        if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
             credentialsService.update(credential);
             return ResponseEntity.status(HttpStatus.CREATED)  // HTTP 201
                     .contentType(MediaType.APPLICATION_JSON)
@@ -102,15 +103,15 @@ public class CredentialsController {
 
     @DeleteMapping("/credentials/{id}")
     public ResponseEntity<?>
-    deleteCredential(@PathVariable Long id, @RequestParam("uuid") String frontendUuid) {
+    deleteCredential(@PathVariable Long id, @RequestParam("uuid") String frontendUuid) throws Exception {
         Optional<CredentialsEntity> credential = credentialsService.loadOne(id);
-        Optional<UserEntity> user = userService.loadOne(credential.get().getUser().getId());
+        Optional<UserEntity> existingUser = userService.loadOne(credential.get().getUser().getId());
 
         if (!credential.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        if(user.get().getSessionUUID().equals(frontendUuid)) {
+        if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
             credentialsService.delete(id);
             return ResponseEntity.ok().build();
         }
@@ -119,11 +120,11 @@ public class CredentialsController {
     }
 
     @PostMapping("/credentials/user/{userId}")
-    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid) {
-        Optional<UserEntity> user = userService.loadOne(userId);
+    public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid) throws Exception {
+        Optional<UserEntity> existingUser = userService.loadOne(userId);
 
-        if(user.isPresent()) {
-            if(user.get().getSessionUUID().equals(frontendUuid)) {
+        if(existingUser.isPresent()) {
+            if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
                 List<CredentialsEntity> credentials = credentialsService.getAllCredentialsByUserId(userId);
                 List<CredentialsReturn> credentialsReturnList = mapCredentialsToCredentialsReturnList(credentials);
                 return ResponseEntity

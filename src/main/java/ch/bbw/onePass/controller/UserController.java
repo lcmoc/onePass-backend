@@ -33,9 +33,9 @@ public class UserController {
 
     @PostMapping("/users/email={email}")
     public ResponseEntity<?> loginUser(@PathVariable String email, @RequestParam("uuid") String frontendUuid) throws Exception {
-        Optional<UserEntity> optionalUser = userService.getByEmail(email);
+        Optional<UserEntity> existingUser = userService.getByEmail(email);
 
-        if (!optionalUser.isPresent()) {
+        if (!existingUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -43,12 +43,12 @@ public class UserController {
         String encryptedUUID = AESUtil.encrypt(uuid.toString());
 
         if(frontendUuid.isEmpty()) {
-            optionalUser.get().setSessionUUID(uuid.toString());
+            existingUser.get().setSessionUUID(uuid.toString());
             return ResponseEntity.ok(encryptedUUID);
         }
 
-        if (optionalUser.get().getSessionUUID().equals(frontendUuid)) {
-            UserEntity user = optionalUser.get();
+        if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
+            UserEntity user = existingUser.get();
             UserUuidDto userUuidDto = new UserUuidDto(user.getId(), user.getSecretKey(), user.getEmail(), encryptedUUID);
             return ResponseEntity.ok(userUuidDto);
         }
@@ -86,10 +86,10 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam("uuid") String frontendUuid) {
+    public ResponseEntity<UserEntity> updateUser(@RequestBody UserEntity user, @RequestParam("uuid") String frontendUuid) throws Exception {
         Optional<UserEntity> existingUser = userService.loadOne(user.getId());
 
-        if (existingUser.get().getSessionUUID().equals(frontendUuid)) {
+        if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
 
                 if (!existingUser.isPresent()) {
                     return ResponseEntity.notFound().build();
@@ -110,14 +110,14 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestParam("uuid") String frontendUuid) {
-        Optional<UserEntity> user = userService.loadOne(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestParam("uuid") String frontendUuid) throws Exception {
+        Optional<UserEntity> existingUser = userService.loadOne(id);
 
-        if (!user.isPresent()) {
+        if (!existingUser.isPresent()) {
             return ResponseEntity.notFound().build(); // HTTP 404
         }
 
-        if (user.get().getSessionUUID().equals(frontendUuid)) {
+        if (existingUser.get().getSessionUUID().equals(AESUtil.decrypt(frontendUuid))) {
                 credentialsService.deleteByUserId(id);
                 categoryService.deleteByUserId(id);
                 userService.delete(id);

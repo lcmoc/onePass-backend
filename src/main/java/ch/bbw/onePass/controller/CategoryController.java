@@ -103,7 +103,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/categories/user/{userId}")
+    @PostMapping("/categories/user/{userId}")
     public ResponseEntity<List<CategoryReturn>> getCategoriesByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid) {
         Optional<UserEntity> user = userService.loadOne(userId);
 
@@ -124,7 +124,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/categories/name={name}")
+    @PostMapping("/categories/name={name}")
     public ResponseEntity<Optional<CategoryEntity>> getCategoryByName(@PathVariable String name, @RequestParam("uuid") String frontendUuid) {
         Optional<CategoryEntity> category = categoryService.getByName(name);
         Optional<UserEntity> user = userService.loadOne(category.get().getUser().getId());

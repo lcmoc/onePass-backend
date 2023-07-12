@@ -31,7 +31,7 @@ public class UserController {
         this.userService = studentService;
     }
 
-    @GetMapping("/users/email={email}")
+    @PostMapping("/users/email={email}")
     public ResponseEntity<?> loginUser(@PathVariable String email, @RequestParam("uuid") String frontendUuid) throws Exception {
         Optional<UserEntity> optionalUser = userService.getByEmail(email);
 
@@ -56,7 +56,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/logout/{id}")
+    @PostMapping("/logout/{id}")
     public ResponseEntity<?> logoutUser(@PathVariable Long id) {
         Optional<UserEntity> user = userService.loadOne(id);
 

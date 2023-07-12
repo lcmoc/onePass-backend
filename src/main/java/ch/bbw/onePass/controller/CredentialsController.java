@@ -2,14 +2,11 @@ package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.JsonReturnModels.CategoryReturn;
 import ch.bbw.onePass.JsonReturnModels.CredentialsReturn;
-import ch.bbw.onePass.helpers.UUIDUtils;
 import ch.bbw.onePass.model.CategoryEntity;
 import ch.bbw.onePass.model.CredentialsEntity;
 import ch.bbw.onePass.model.UserEntity;
-import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
 import ch.bbw.onePass.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -121,7 +118,7 @@ public class CredentialsController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @GetMapping("/credentials/user/{userId}")
+    @PostMapping("/credentials/user/{userId}")
     public ResponseEntity<List<CredentialsReturn>> getCredentialsByUserId(@PathVariable("userId") Long userId, @RequestParam("uuid") String frontendUuid) {
         Optional<UserEntity> user = userService.loadOne(userId);
 

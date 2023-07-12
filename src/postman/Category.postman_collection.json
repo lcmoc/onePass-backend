@@ -4,34 +4,33 @@
 		"name": "Category",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "26525659",
-		"_collection_link": "https://cloudy-flare-975534.postman.co/workspace/Team-Workspace~8215001e-caaf-49fd-8a50-57e3b7bd5bfe/collection/26525659-7fc2b283-d8e6-40a8-acb3-170932b9deb3?action=share&creator=26525659&source=collection_link"
+		"_collection_link": "https://school-nerds.postman.co/workspace/OnePass~8215001e-caaf-49fd-8a50-57e3b7bd5bfe/collection/26525659-7fc2b283-d8e6-40a8-acb3-170932b9deb3?action=share&creator=26525659&source=collection_link"
 	},
 	"item": [
 		{
 			"name": "GET",
 			"item": [
 				{
-					"name": "Get all categories",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Get category by name",
+					"name": "Get categories by userid",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/categories/name=Category 3",
+							"raw": "localhost:8080/categories/user/5?uuid=",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"categories",
-								"name=Category 3"
+								"user",
+								"5"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -49,7 +48,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Category 5\",\n    \"user_id\": 1\n}\n",
+							"raw": "{\n    \"name\": \"Category with userId 3\",\n    \"user\": {\n        \"id\": 1\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -57,13 +56,19 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/categories",
+							"raw": "localhost:8080/categories?uuid=",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"categories"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -81,7 +86,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 1,\n    \"name\": \"first category\"\n}\n",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"this is a test\",\n    \"user\": {\n        \"id\": 1\n    }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -89,7 +94,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/categories/1",
+							"raw": "localhost:8080/categories/1?uuid=",
 							"host": [
 								"localhost"
 							],
@@ -97,6 +102,12 @@
 							"path": [
 								"categories",
 								"1"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -113,14 +124,20 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/categories/5",
+							"raw": "localhost:8080/categories/1?uuid=",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"categories",
-								"5"
+								"1"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
 							]
 						}
 					},

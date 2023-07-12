@@ -40,7 +40,7 @@ public class UserController {
         if (!optionalUser.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        
+
         UUID uuid = UuidSingleton.getInstance().getUuid();
         String encryptedUUID = AESUtil.encrypt(uuid.toString());
 
@@ -51,7 +51,6 @@ public class UserController {
 
         if (optionalUser.get().getSessionUUID().equals(frontendUuid)) {
             UserEntity user = optionalUser.get();
-
             UserUuidDto userUuidDto = new UserUuidDto(user.getId(), user.getSecretKey(), user.getEmail(), encryptedUUID);
             return ResponseEntity.ok(userUuidDto);
         }

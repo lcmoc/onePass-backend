@@ -1,14 +1,12 @@
 package ch.bbw.onePass.controller;
 
 import ch.bbw.onePass.helpers.AESUtil;
-import ch.bbw.onePass.helpers.UUIDUtils;
 import ch.bbw.onePass.JsonReturnModels.UserUuidDto;
 import ch.bbw.onePass.helpers.UuidSingleton;
 import ch.bbw.onePass.service.CategoryService;
 import ch.bbw.onePass.service.CredentialsService;
 import ch.bbw.onePass.service.UserService;
 import ch.bbw.onePass.model.UserEntity;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -123,7 +121,7 @@ public class UserController {
                 credentialsService.deleteByUserId(id);
                 categoryService.deleteByUserId(id);
                 userService.delete(id);
-                return ResponseEntity.noContent().build(); // HTTP 204
+                return ResponseEntity.ok().build(); // HTTP 204
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // HTTP 401

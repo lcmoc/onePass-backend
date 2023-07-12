@@ -97,7 +97,7 @@ public class CategoryController {
                 credentialsService.delete(credential.getId());
             }
             categoryService.delete(id);
-            return ResponseEntity.noContent().build();  // HTTP 204
+            return ResponseEntity.ok().build();  // HTTP 204
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

@@ -115,7 +115,7 @@ public class CredentialsController {
 
         if(user.get().getSessionUUID().equals(frontendUuid)) {
             credentialsService.delete(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

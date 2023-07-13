@@ -5,7 +5,7 @@ Das folgende Grundkonzept beschreibt einen Ansatz zur sicheren Speicherung von P
 
 ## Schritte:
 
-1. Erstmalige Anmeldung:
+1. Registrierung:
 
 - Der Nutzer gibt sein Masterpasswort ein.
 - Ein symmetrischer MasterKey wird aus dem eingegebenen Masterpasswort generiert.
@@ -14,31 +14,32 @@ Das folgende Grundkonzept beschreibt einen Ansatz zur sicheren Speicherung von P
 
 2. Zukünftige Anmeldungen:
 
-- Der verschlüsselte MasterKey wird aus der Datenbank abgerufen.
+- Sobald ein Nutzer auf die login Seite kommt, wird ein request ans Backend geschickt, als Antwort kommt eine verschlüsselte UUID zurück und speichert diese im User auf der Datenbank.
+- Die UUID wird entschlüsselt.
+- Die UUID wird mit einem neuen Passwort verschlüsselt.
+- Bei jedem Request wird die UUID erneut verschlüsselt ans Backend geschickt.
+- Im Backend wird die UUID entschlüsselt und mit der UUID, welche sich in der Datenbank befindet abgeglichen.
+- Der verschlüsselte MasterKey wird aus der Datenbank abgerufen und ans Frontend gesendet.
 - Der Nutzer gibt sein Masterpasswort erneut ein.
 - Das erneut eingegebene Masterpasswort wird verwendet, um den MasterKey wiederherzustellen.
-- Passwortentschlüsselung:
 
+- Passwortentschlüsselung:
 - Der wiederhergestellte MasterKey wird verwendet, um die anderen Passwörter aus der Datenbank zu entschlüsseln.
 - Die entschlüsselten Passwörter werden dem Nutzer angezeigt.
 
 ## Sicherheitsaspekte:
 
 1. Verschlüsselung:
-
 - Die Passwörter werden mit einem starken symmetrischen MasterKey verschlüsselt, der aus dem Masterpasswort generiert wird.
 - Eine bewährte Verschlüsselungstechnik sollte verwendet werden, um die Sicherheit des MasterKeys und der verschlüsselten Passwörter zu gewährleisten.
 
 2. Sicherer Speicher:
-
 - Der verschlüsselte MasterKey und andere Informationen werden sicher in der Datenbank gespeichert, um unbefugten Zugriff zu verhindern.
 - Geeignete Sicherheitsmaßnahmen wie Zugriffskontrollen und Verschlüsselung können angewendet werden.
 
 3. Schutz des Masterpassworts:
-
 - Der Nutzer sollte angeleitet werden, ein starkes und einzigartiges Masterpasswort zu wählen, um die Sicherheit zu gewährleisten.
 - Sicherheitsvorkehrungen wie Passwortrichtlinien und Zwei-Faktor-Authentifizierung können implementiert werden, um das Masterpasswort zu schützen.
 
-4. Sicherheitsbewusstsein:
-
-- Der Nutzer sollte über bewährte Sicherheitspraktiken informiert werden, wie regelmäßige Passwortaktualisierung und Vorsicht beim Umgang mit Passwörtern.
+4. Sessions:
+- Durch die verschlüsselte Session UUID, kann kein Nutzer die Daten eines anderen Nutzers einsehen, extrene Programme oder abfragen der Entpoints werden als nicht autorisiert erkannt und erhalten dementsprechend keine Daten

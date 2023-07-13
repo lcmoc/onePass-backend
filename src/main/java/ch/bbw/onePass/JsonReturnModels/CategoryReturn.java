@@ -1,7 +1,11 @@
 package ch.bbw.onePass.JsonReturnModels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CategoryReturn {
     public CategoryReturn(Long id, String name, Long userId) {
         this.id = id;

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="yljdF-pFXAPBTN3tDBmU" name="Page-1">
-        <mxGraphModel dx="1976" dy="3196" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="101" dy="2192" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -16,7 +16,7 @@
                 <mxCell id="116" value="Password" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" parent="111" vertex="1">
                     <mxGeometry x="40" y="200" width="600" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="276" value="Send" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="111">
+                <mxCell id="276" value="Send" style="rounded=1;whiteSpace=wrap;html=1;" parent="111" vertex="1">
                     <mxGeometry x="280" y="370" width="120" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="117" value="User" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -294,8 +294,8 @@
                 <mxCell id="248" value="Verschlüsselter masterKey überschreibt den alten masterKey auf der Datenbank" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="4195" y="2540" width="520" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="261" value="Frontend fetcht sobald eine Emailadresse eingegeben wurde die verschlüsselte UUID&lt;br&gt;&lt;br&gt;Request: localhost:8080/user/email={email}?uuid=" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" parent="1" vertex="1">
-                    <mxGeometry x="1820" y="740" width="710" height="80" as="geometry"/>
+                <mxCell id="261" value="Frontend fetcht sobald gesendet wurde die verschlüsselte UUID&lt;br&gt;&lt;br&gt;Request: localhost:8080/user/email={email}?uuid=" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" parent="1" vertex="1">
+                    <mxGeometry x="1910" y="740" width="530" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="266" value="PostMapping" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="2790" y="390" width="410" height="90" as="geometry"/>
@@ -318,40 +318,40 @@
                 <mxCell id="273" value="Password" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" parent="271" vertex="1">
                     <mxGeometry x="40" y="200" width="600" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="275" value="Send" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="271">
+                <mxCell id="275" value="Send" style="rounded=1;whiteSpace=wrap;html=1;" parent="271" vertex="1">
                     <mxGeometry x="280" y="370" width="120" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="274" value="&lt;br&gt;Der User gibt jetzt auch noch sein Passwort ein und klickt auf senden&lt;br&gt;&lt;br&gt;Jetzt wird der Request: &lt;br&gt;&lt;br&gt;localhost:8080/user/email={email}?uuid={encryptedUUID}&lt;br&gt;&lt;br&gt;Gesendet" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" parent="1" vertex="1">
                     <mxGeometry x="4590" y="820" width="580" height="190" as="geometry"/>
                 </mxCell>
-                <mxCell id="277" value="Die UUID wird im Frontend mit dem selben Passwort wie es im backend verschlüsselt worden ist entschlüsselt,&lt;br&gt;Danach wird die entschlüsselte UUID erneut mit einem neuen Passort synchron verschlüsselt" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+                <mxCell id="277" value="Die UUID wird im Frontend mit dem selben Passwort wie es im backend verschlüsselt worden ist entschlüsselt,&lt;br&gt;Danach wird die entschlüsselte UUID erneut mit einem neuen Passort synchron verschlüsselt" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" parent="1" vertex="1">
                     <mxGeometry x="3410" y="830" width="910" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="278" value="&lt;font size=&quot;3&quot;&gt;Einloggen&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;fontSize=48;startSize=60;" vertex="1" parent="1">
+                <mxCell id="278" value="&lt;font size=&quot;3&quot;&gt;Einloggen&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;fontSize=48;startSize=60;" parent="1" vertex="1">
                     <mxGeometry x="4520" y="220" width="680" height="460" as="geometry"/>
                 </mxCell>
-                <mxCell id="279" value="E-Mail" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" vertex="1" parent="278">
+                <mxCell id="279" value="E-Mail" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" parent="278" vertex="1">
                     <mxGeometry x="40" y="105" width="600" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="280" value="Password" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" vertex="1" parent="278">
+                <mxCell id="280" value="Password" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" parent="278" vertex="1">
                     <mxGeometry x="40" y="200" width="600" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="281" value="Send" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="278">
+                <mxCell id="281" value="Send" style="rounded=1;whiteSpace=wrap;html=1;" parent="278" vertex="1">
                     <mxGeometry x="280" y="370" width="120" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="282" value="PostMapping" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="282" value="PostMapping" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="5500" y="410" width="410" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="283" value="Endpoint ULR:&amp;nbsp; localhost:8080/users/email={email}?uuid=@Pathvariable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="282">
+                <mxCell id="283" value="Endpoint ULR:&amp;nbsp; localhost:8080/users/email={email}?uuid=@Pathvariable" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="282" vertex="1">
                     <mxGeometry y="30" width="410" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="284" value="Return Value: User(Id: Long, secretKey: String, email: String)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="282">
+                <mxCell id="284" value="Return Value: User(Id: Long, secretKey: String, email: String)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="282" vertex="1">
                     <mxGeometry y="60" width="410" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="285" value="Nun erkennt der selbe Endpoint das eine UUID vorhanden ist. Die UUID wird also jetzt&lt;br&gt;im backend entschlüsselt und mit der UUID welche beim user in der Datenbank gespeichert wird abgegelichen&lt;br&gt;Falls die beiden UUIDs übereinstimen, wird der User(id, Secret Key, Email) als antwort geschickt" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" vertex="1" parent="1">
+                <mxCell id="285" value="Nun erkennt der selbe Endpoint das eine UUID vorhanden ist. Die UUID wird also jetzt&lt;br&gt;im backend entschlüsselt und mit der UUID welche beim user in der Datenbank gespeichert wird abgegelichen&lt;br&gt;Falls die beiden UUIDs übereinstimen, wird der User(id, Secret Key, Email) als antwort geschickt" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;" parent="1" vertex="1">
                     <mxGeometry x="5290" y="870" width="900" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="287" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="111" target="266">
+                <mxCell id="287" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="111" target="266" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="2490" y="460" as="sourcePoint"/>
                         <mxPoint x="3770" y="1250" as="targetPoint"/>
@@ -361,7 +361,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="288" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="271">
+                <mxCell id="288" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="271" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="2995" y="480" as="sourcePoint"/>
                         <mxPoint x="3190" y="670" as="targetPoint"/>
@@ -371,7 +371,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="289" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="271" target="278">
+                <mxCell id="289" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="271" target="278" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="4610" y="670" as="sourcePoint"/>
                         <mxPoint x="4660" y="620" as="targetPoint"/>
@@ -381,7 +381,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="290" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.536;entryY=1.19;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="278" target="284">
+                <mxCell id="290" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.536;entryY=1.19;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="278" target="284" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="5260" y="1220" as="sourcePoint"/>
                         <mxPoint x="5310" y="1170" as="targetPoint"/>
@@ -391,7 +391,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="291" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="282" target="117">
+                <mxCell id="291" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="282" target="117" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="6190" y="1370" as="sourcePoint"/>
                         <mxPoint x="6240" y="1320" as="targetPoint"/>

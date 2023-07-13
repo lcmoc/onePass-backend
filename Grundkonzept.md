@@ -14,10 +14,11 @@ Das folgende Grundkonzept beschreibt einen Ansatz zur sicheren Speicherung von P
 
 2. Zukünftige Anmeldungen:
 
-- Sobald ein Nutzer auf die login Seite kommt, wird ein request ans Backend geschickt, als Antwort kommt eine verschlüsselte UUID zurück und speichert diese im User auf der Datenbank.
+- Sobald ein Nutzer versucht sich einzuloggen, wird ein request ans Backend geschickt, als Antwort kommt eine verschlüsselte UUID zurück und speichert diese im User auf der Datenbank.
 - Die UUID wird entschlüsselt.
 - Die UUID wird mit einem neuen Passwort verschlüsselt.
 - Bei jedem Request wird die UUID erneut verschlüsselt ans Backend geschickt.
+- Jetzt wird der selbe Request erneut aber diesmal mit der verschlüsselten UUID geschickt
 - Im Backend wird die UUID entschlüsselt und mit der UUID, welche sich in der Datenbank befindet abgeglichen.
 - Der verschlüsselte MasterKey wird aus der Datenbank abgerufen und ans Frontend gesendet.
 - Der Nutzer gibt sein Masterpasswort erneut ein.
